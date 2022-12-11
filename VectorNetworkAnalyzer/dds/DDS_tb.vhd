@@ -19,9 +19,10 @@ architecture sim of DDS_tb is
 	signal WB_Sel			: std_logic_vector(1 downto 0);
 	signal WB_STB			: std_logic;
 	signal WB_Cyc			: std_logic;
+	signal WB_Ack			: std_logic;
 	signal WB_CTI			: std_logic_vector(2 downto 0);
 	
-	component DDS 
+	component DDS is
 		port (
 		-- Входные сигналы
 		clk	: in std_logic;
@@ -44,7 +45,7 @@ architecture sim of DDS_tb is
 	);
 	end component;
 	
-	component DDS_tester
+	component DDS_tester is
 		port (
 		clk	: out std_logic;
 		nRst	: out std_logic;
@@ -54,8 +55,8 @@ architecture sim of DDS_tb is
 		WB_Sel		: out	std_logic_vector(1 downto 0);
 		WB_STB		: out	std_logic;
 		WB_Cyc		: out	std_logic;
-		WB_CTI		: out	std_logic_vector(2 downto 0);
-		)
+		WB_CTI		: out	std_logic_vector(2 downto 0)
+		);
 	end component;
 	
 begin
@@ -70,6 +71,7 @@ begin
 		WB_Cyc => WB_Cyc,
 		WB_Ack => WB_Ack,
 		WB_CTI => WB_CTI,
+		WB_STB => WB_STB,
 		DataFlow_Clk => DataFlow_Clk,
 		ADC_Clk => ADC_Clk
 	);
@@ -83,7 +85,7 @@ begin
 	WB_WE => WB_WE,
 	WB_Sel => WB_Sel,
 	WB_Cyc => WB_Cyc,
-	WB_Ack => WB_Ack,
+	WB_STB => WB_STB,
 	WB_CTI => WB_CTI
 	);
 	

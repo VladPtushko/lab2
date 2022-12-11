@@ -46,7 +46,7 @@ begin
 	
 	process(clk, nRst, WB_STB, WB_WE, WB_Cyc)
 	begin
-		if (nRst = '1') then
+		if (nRst = '0') then
 			reg_clear <= '0';
 			reg_enable <= '0';
 			reg_ADC_FTW <= (others => '0');
