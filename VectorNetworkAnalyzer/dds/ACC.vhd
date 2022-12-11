@@ -1,17 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
 
 entity ACC is
 	port
 	(
 		clk		: in	std_logic;
 		nRst		: in	std_logic;
-		enable	: in 	std_logic;
-		FTW		: in	unsigned(31 downto 0);
-		ACC_in	: in	unsigned(31 downto 0);
+		enable	: in 	std_logic; -- '1' to disable
+		FTW		: in	std_logic_vector(31 downto 0);
+		ACC_in	: in	std_logic_vector(31 downto 0);
 		
-		ACC_out	: out	unsigned(31 downto 0)
+		ACC_out	: out	std_logic_vector(31 downto 0)
 	);
 end ACC;
 
@@ -23,7 +23,7 @@ begin
 	begin
 		if(nRst = '0') then
 			ACC_out <= (others => '0');
-		elsif(rising_edge(clk) and not enable) then
+		elsif(rising_edge(clk) and enable = '0') then
 			ACC_out <= ACC_in + FTW;
 		end if;
 	end process;

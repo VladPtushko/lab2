@@ -1,6 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
 entity DDS is
 	port
@@ -11,18 +10,12 @@ entity DDS is
 		
 		-- Сигналы WISHBONE
 		WB_Addr		: in	std_logic_vector(15 downto 0);
-		WB_DataOut	: out	std_logic_vector(15 downto 0);
-		WB_DataIn_0	: in	std_logic_vector(15 downto 0);
-		WB_DataIn_1	: in	std_logic_vector(15 downto 0);
-		WB_DataIn_2	: in	std_logic_vector(15 downto 0);
-		WB_DataIn_3	: in	std_logic_vector(15 downto 0);
+--		WB_DataOut	: out	std_logic_vector(15 downto 0);
+		WB_DataIn	: in	std_logic_vector(15 downto 0);
 		WB_WE			: in	std_logic;
 		WB_Sel		: in	std_logic_vector(1 downto 0);
 		WB_STB		: in	std_logic;
-		WB_Cyc_0		: in	std_logic;
-		WB_Cyc_1		: in	std_logic;
-		WB_Cyc_2		: in	std_logic;
-		WB_Cyc_3		: in	std_logic;
+		WB_Cyc		: in	std_logic;
 		WB_Ack		: out	std_logic;
 		WB_CTI		: in	std_logic_vector(2 downto 0);
 		
@@ -39,16 +32,16 @@ architecture Behavioral of DDS is
 			clk		: in	std_logic;
 			nRst		: in	std_logic;
 			enable	: in 	std_logic;
-			FTW		: in	unsigned(31 downto 0);
-			ACC_in	: in	unsigned(31 downto 0);
+			FTW		: in	std_logic_vector(31 downto 0);
+			ACC_in	: in	std_logic_vector(31 downto 0);
 			
-			ACC_out	: out	unsigned(31 downto 0)
+			ACC_out	: out	std_logic_vector(31 downto 0)
 		);
 	end component;
 	
 	component FGen is
 		port(
-			ACC_out		: in	unsigned(31 downto 0);
+			ACC_out		: in	std_logic_vector(31 downto 0);
 
 			fADC			: out	std_logic;
 			fDataFlow	: out	std_logic
@@ -57,41 +50,45 @@ architecture Behavioral of DDS is
 	
 	component WB is
 		port(
+			-- Управляющие
+			clk	: in std_logic;
+			nRst	: in std_logic;
+			
+			-- Wishbone сигналы
 			WB_Addr		: in	std_logic_vector(15 downto 0);
-			WB_DataOut	: out	std_logic_vector(15 downto 0);
-			WB_DataIn_0	: in	std_logic_vector(15 downto 0);
-			WB_DataIn_1	: in	std_logic_vector(15 downto 0);
-			WB_DataIn_2	: in	std_logic_vector(15 downto 0);
-			WB_DataIn_3	: in	std_logic_vector(15 downto 0);
+--			WB_DataOut	: out	std_logic_vector(15 downto 0);
+			WB_DataIn	: in	std_logic_vector(15 downto 0);
 			WB_WE			: in	std_logic;
 			WB_Sel		: in	std_logic_vector(1 downto 0);
 			WB_STB		: in	std_logic;
-			WB_Cyc_0		: in	std_logic;
-			WB_Cyc_1		: in	std_logic;
-			WB_Cyc_2		: in	std_logic;
-			WB_Cyc_3		: in	std_logic;
+			WB_Cyc		: in	std_logic;
 			WB_Ack		: out	std_logic;
 			WB_CTI		: in	std_logic_vector(2 downto 0);
 			
+			-- Получаемые сигналы
 			clear		: out std_logic;
 			enable	: out std_logic;
-			ADC_FTW	: out unsigned(31 downto 0)
+			ADC_FTW	: out std_logic_vector(31 downto 0)
 		);
 	end component;
 	
 	-- Register signals from wishbone
-	signal ADC_FTW	: unsigned(31 downto 0);
+	signal ADC_FTW	: std_logic_vector(31 downto 0);
 	signal clear	: std_logic;
 	signal enable	: std_logic;
 	
-	signal ACC_reg	: unsigned(31 downto 0);
+	signal ACC_reg	: std_logic_vector(31 downto 0);
 
 begin
 
 	WB_0:WB port map(
+		-- Управляющие
+		clk	=> clk,
+		nRst	=> nRst,
+	
 		-- Сигналы WISHBONE
 		WB_Addr		=> WB_Addr,
-		WB_DataOut	=> WB_DataOut,
+--		WB_DataOut	=> WB_DataOut,
 		WB_DataIn	=> WB_DataIn,
 		WB_WE			=> WB_WE,
 		WB_Sel		=> WB_Sel,

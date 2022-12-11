@@ -35,7 +35,7 @@ begin
 		
 		-- Сигналы WISHBONE
 		WB_Addr		=> WB_Addr,
-		WB_DataOut	=> WB_DataOut,
+--		WB_DataOut	=> WB_DataOut,
 		WB_DataIn	=> WB_DataIn,
 		WB_WE			=> WB_WE,
 		WB_Sel		=> WB_Sel,
@@ -43,7 +43,6 @@ begin
 		WB_Cyc		=> WB_Cyc,
 		WB_Ack		=> WB_Ack,
 		WB_CTI		=> WB_CTI,
-		
 		
 		-- Выходные сигналы
 		DataFlow_Clk	=>	DataFlow_Clk,

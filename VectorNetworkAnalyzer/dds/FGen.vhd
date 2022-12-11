@@ -1,10 +1,9 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 
 entity FGen is
 	port(
-		ACC_out		: in	unsigned(31 downto 0);
+		ACC_out		: in	std_logic_vector(31 downto 0);
 		
 		fADC			: out	std_logic;
 		fDataFlow	: out	std_logic
@@ -12,8 +11,6 @@ entity FGen is
 end FGen;
 
 architecture Behavioral of FGen is
-
-	
 
 begin
 	
