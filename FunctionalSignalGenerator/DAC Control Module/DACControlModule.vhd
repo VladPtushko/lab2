@@ -28,6 +28,7 @@ architecture Behavioral of DACControlModule is
 	signal DAC_Rst_buf: std_logic := '0';
 	signal DAC_Rst_count: std_logic_vector(3 downto 0) := (others=>'0');
 	signal DAC_Clk_falling: std_logic := '0';
+	signal Select_Enable_reg: std_logic := '0';
 	
 	
 begin
@@ -80,18 +81,32 @@ begin
 	end process;
 	
 	
-	process(Clk,nRst,DAC_Select_buf,DAC_I_sig,DAC_Q_sig)
+	process(Clk,nRst,Power_Down,DAC_Rst_count,DAC_Rst_buf)
 	begin
-		if (nRst='0') then
-			DAC_Data <= "0000000000";
-		elsif (rising_edge(Clk)) then
-		
-			if (DAC_Select_buf='1') then
-				DAC_Data <= DAC_I_sig;
-			elsif (DAC_Select_buf='0') then
-				DAC_Data <= DAC_Q_sig;
-			end if;
+		if (nRst='0' or Power_Down='1' or DAC_Rst_count >= "1000" or DAC_Rst_buf='1') then
+			Select_Enable_reg <= '0';
 			
+		elsif(rising_edge(Clk)) then
+			if (ClkReduceFreq_count='1') then
+				Select_Enable_reg <= '1';
+			end if;
+		end if;
+	end process;
+	
+	
+	process(Clk,nRst,Select_Enable_reg,DAC_Select_buf,DAC_I_sig,DAC_Q_sig,Power_Down,DAC_Rst_count,DAC_Rst_buf)
+	begin
+		if (nRst='0' or Power_Down='1' or DAC_Rst_count >= "1000" or DAC_Rst_buf='1') then
+			DAC_Data <= "0000000000";
+			
+		elsif (falling_edge(Clk)) then
+			if (Select_Enable_reg='1') then
+				if (DAC_Select_buf='1') then
+					DAC_Data <= DAC_I_sig;
+				elsif (DAC_Select_buf='0') then
+					DAC_Data <= DAC_Q_sig;
+				end if;
+			end if;
 		end if;
 	end process;
 	
