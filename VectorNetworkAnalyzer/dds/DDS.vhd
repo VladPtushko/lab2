@@ -32,6 +32,7 @@ architecture Behavioral of DDS is
 			clk		: in	std_logic;
 			nRst		: in	std_logic;
 			enable	: in 	std_logic;
+			clear		: in	std_logic;
 			FTW		: in	std_logic_vector(31 downto 0);
 			ACC_in	: in	std_logic_vector(31 downto 0);
 			
@@ -107,6 +108,7 @@ begin
 		clk		=> clk,
 		nRst		=> nRst,
 		enable	=> enable,
+		clear		=> clear,
 		FTW		=> ADC_FTW,
 		ACC_in	=> ACC_reg,
 		

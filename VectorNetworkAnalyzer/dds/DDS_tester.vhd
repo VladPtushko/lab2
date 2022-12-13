@@ -16,7 +16,7 @@ entity DDS_tester is
 end entity DDS_tester;
 
 architecture a_DDS_tester of DDS_tester is 
-	constant clk_period: time := 60 ns;
+	constant clk_period: time := 16 ns;
 	signal clk_reg: std_logic := '1';
 
 	procedure skiptime_clk(time_count: in integer) is
@@ -34,10 +34,12 @@ architecture a_DDS_tester of DDS_tester is
 		
 		tester_process: process 
 			begin 
+				wait for 100 ns;
 				nRst <= '0';
 				
 				skiptime_clk(2); 
 				
+				-- Ввод FTW
 				nRst <= '1';
 				WB_DataIn <= (12 => '1', others => '0');
 				WB_Cyc <= '1';
@@ -47,29 +49,50 @@ architecture a_DDS_tester of DDS_tester is
 				WB_Sel <= "11";
 				WB_CTI <= "000";
 				
-				skiptime_clk(1);
+				skiptime_clk(2);
+				
+				-- Остановка ввода
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
 				WB_WE <= '0';
 				WB_STB <= '0';
 				WB_Sel <= "00";
-				WB_CTI <= "000";
 				
-				wait for 2000 ns;
+				-- Работа синтезатора
+				wait for 1500 ns;
 				
-				skiptime_clk(2); 
-				
-				nRst <= '1';
+				-- Ввод clear = '1'
 				WB_DataIn <= (0 => '1', others => '0');
 				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
-				WB_CTI <= "000";
 				
-				skiptime_clk(1);
+				wait for clk_period;
+				
+				-- Остановка ввода
+				WB_DataIn <= (others => '0');
+				WB_Cyc <= '0';
+				WB_Addr <= (others => '0');
+				WB_WE <= '0';
+				WB_STB <= '0';
+				WB_Sel <= "00";
+				
+				wait for 100 ns;
+				
+				-- Ввод clear = '0'
+				WB_DataIn <= (others => '0');
+				WB_Cyc <= '1';
+				WB_Addr <= (others => '0');
+				WB_WE <= '1';
+				WB_STB <= '1';
+				WB_Sel <= "01";
+				
+				wait for clk_period;
+				
+				-- Остановка ввода
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -78,10 +101,9 @@ architecture a_DDS_tester of DDS_tester is
 				WB_Sel <= "00";
 				WB_CTI <= "000";
 				
-				wait for 120 ns;
+				wait for 1000 ns;
 				
-				skiptime_clk(2); 
-				
+				-- Ввод enable = '1'
 				nRst <= '1';
 				WB_DataIn <= (1 => '1', others => '0');
 				WB_Cyc <= '1';
@@ -91,7 +113,7 @@ architecture a_DDS_tester of DDS_tester is
 				WB_Sel <= "01";
 				WB_CTI <= "000";
 				
-				skiptime_clk(1);
+				skiptime_clk(2);
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
