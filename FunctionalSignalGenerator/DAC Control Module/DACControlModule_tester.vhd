@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
-use std.env.finish;
+use std.env.stop;
 
 entity DACControlModule_tester is 
 	port (
@@ -58,8 +58,8 @@ begin
 		nRst <= '0';
 		skiptime_Clk(6);
 		
-		report "Calling 'finish'";
-      finish;
+		report "Calling 'stop'";
+      stop;
 	end process;
 
 end architecture;	
