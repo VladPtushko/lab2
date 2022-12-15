@@ -8,12 +8,12 @@ entity Test is
     Clk : in std_logic;
     nRst : in std_logic;
     --входная Fifo
-    q_output : in std_logic_vector (15 downto 0);
+    q_input : in std_logic_vector (15 downto 0);
     usedw_input : in std_logic_vector (10 downto 0);
     rdreq_output : out std_logic;
     --входная Fifo
-    data_input : out std_logic_vector (15 downto 0);
-    wrreq_input : out std_logic;
+    data_output : out std_logic_vector (15 downto 0);
+    wrreq_output : out std_logic;
     --WISHBONE
     WB_Addr : out std_logic_vector (15 downto 0);
     WB_DataOut : out std_logic_vector (15 downto 0);
@@ -31,14 +31,15 @@ entity Test is
   );
 end entity;
 architecture rtl of Test is
-  type current_type is (state_wait, header_read, header_analasis, header_write, error_edit, cmd_state, data_edit);
-  --type read_type is (h1, h2, h3, d1);
+  type current_type is (state_wait, header_read, addres_check, header_analysis, header_transfer, data_transfer, error_handling);
   signal header_word_left : std_logic_vector(2 downto 1);
   signal current_state : current_type;
-  --signal R_typ : read_type;
-  signal used_words : std_logic_vector(10 downto 0);
+  signal double_write : std_logic;
+  signal read_s : std_logic;
+  signal write_s : std_logic;
+  --signal used_words : std_logic_vector(10 downto 0);
   signal byte_left : std_logic_vector(9 downto 0);
-  signal data_s : std_logic_vector (15 downto 0);
+  signal data_r : std_logic_vector (15 downto 0);
   signal Cmd : std_logic_vector(2 downto 0);
   signal FB : std_logic;
   signal R1 : std_logic_vector(1 downto 0);
@@ -50,12 +51,11 @@ architecture rtl of Test is
   signal Addr_write : std_logic_vector (15 downto 0);
 
 begin
-
   process (Clk, nRst) begin
-    if (nRst = '1') then
-      used_words <= (others => '0');
+    if (nRst = '0') then
+      --used_words <= (others => '0');
       byte_left <= (others => '0');
-      data_s <= (others => '0');
+      data_r <= (others => '0');
       Cmd <= (others => '0');
       FB <= '0';
       R1 <= (others => '0');
@@ -65,69 +65,79 @@ begin
       R2 <= (others => '0');
       Addr <= (others => '0');
       current_state <= state_wait;
-    elsif (Clk'event and Clk = '1') then
-      used_words <= usedw_input;
-      if (current_state = state_wait) then
-        if (used_words > 2) then
-          if (byte_left = 0 or byte_left = 1023) then
+
+    elsif (rising_edge(Clk)) then
+      case current_state is
+        when state_wait =>
+          if (usedw_input > 2) then
+            current_state <= header_read;
           end if;
-          current_state <= header_read;
-          header_word_left <= B"11";
-        end if;
 
-      elsif (current_state = header_read and header_word_left = "00") then
-        current_state <= header_analasis;
-      end if;
+        when header_read =>
+          if (header_word_left = B"00") then
+            current_state <= addres_check;
+          end if;
 
-    elsif (current_state = header_write and header_word_left = "00") then
-      if (AddrValid = B"000") then
-        current_state <= data_edit;
-      elsif (Cmd = B"010" or Cmd = B"100" or Cmd = B"110") then
-        current_state <= error_edit;
-      else
-        current_state <= state_wait;
-      end if;
+        when header_analysis =>
+          if (FB = '0' and AddrValid = B"000") then
+            if (Cmd = B"010" or Cmd = B"100" or Cmd = B"110") then
+              current_state <= data_transfer;
+            else
+              current_state <= header_transfer;
+            end if;
+          else
+            current_state <= header_transfer;
+          end if;
+
+        when header_transfer =>
+          if (double_write = '1') then
+            current_state <= header_transfer;
+          elsif (AddrValid = B"000")then
+            current_state <= data_transfer;
+          else
+            current_state <= error_handling;
+          end if;
+
+        when data_transfer =>
+          if (byte_left = 0 or byte_left = 1023) then
+            current_state <= state_wait;
+          end if;
+
+        when error_handling =>
+          if (byte_left = 0 or byte_left = 1023) then
+            current_state <= state_wait;
+          end if;
+      end case;
+
     end if;
   end process;
+  -----------------------------------------------------------------------------------------------------------------------------------------
+  process (Clk) begin
+    if (rising_edge(Clk)) then
 
-  process (Clk, nRst) begin
-    if (nRst = '1') then
-      used_words <= (others => '0');
-      byte_left <= (others => '0');
-      data_s <= (others => '0');
-      Cmd <= (others => '0');
-      FB <= '0';
-      R1 <= (others => '0');
-      BCount <= (others => '0');
-      TID <= (others => '0');
-      AddrValid <= (others => '0');
-      R2 <= (others => '0');
-      Addr <= (others => '0');
-      current_state <= state_wait;
-    elsif (Clk'event and Clk = '1') then
       if (current_state = header_read) then
-        if (header_word_left = B"11") then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          Cmd <= data_s(2 downto 0);
-          FB <= data_s(3);
-          R1 <= data_input(5 downto 4);
-          BCount <= data_s(15 downto 6);
-          byte_left <= BCount;
-        elsif (header_word_left = B"10") then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          TID <= data_input(9 downto 0);
-          AddrValid <= data_s(10 downto 8);
-          R2 <= data_input(15 downto 11);
-        elsif (header_word_left = B"01") then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          Addr <= data_s;
+        if (header_word_left = B"00") then
+          header_word_left <= B"11";
+          read_s <= '1';
+        else
+          if (header_word_left = B"11") then
+            Cmd <= data_r(2 downto 0);
+            FB <= data_r(3);
+            R1 <= data_r(5 downto 4);
+            BCount <= data_r(15 downto 6);
+            byte_left <= BCount;
+          elsif (header_word_left = B"10") then
+            TID <= data_r(7 downto 0);
+            AddrValid <= data_r(10 downto 8);
+            R2 <= data_r(15 downto 11);
+          elsif (header_word_left = B"01") then
+            Addr <= data_r;
+            read_s <= '0';
+          end if;
         end if;
         header_word_left <= header_word_left - B"01";
 
-      elsif (current_state = header_analasis) then
+      elsif (current_state = addres_check) then
         if (Addr < X"0100") then--256
           Addr_write <= Addr;
           AddrValid <= B"000";
@@ -150,188 +160,22 @@ begin
           Addr <= X"B800";
           AddrValid <= B"110";
         end if;
-        if (FB = 0 and AddrValid = B"000") then
-          current_state <= data_edit;
-        else
-          current_state <= header_write;
-          header_word_left <= B"11";
-        end if;
-
-      elsif (current_state = header_write) then
-        if (header_word_left = B"11") then
-          wrreq_input <= '1';
-          data_s(2 downto 0) <= Cmd;
-          data_s(3) <= FB;
-          data_s(5 downto 4) <= R1;
-          data_s(15 downto 6) <= BCount;
-          data_input <= data_s;
-        elsif (header_word_left = B"10") then
-          wrreq_input <= '1';
-          data_s(9 downto 0) <= TID;
-          data_s(10 downto 8) <= AddrValid;
-          data_s(15 downto 11) <= R2;
-          data_input <= data_s;
-        elsif (header_word_left = B"01") then
-          wrreq_input <= '1';
-          data_input <= Addr;
-        end if;
-        header_word_left <= header_word_left - B"01";
-
-      elsif (current_state = error_edit) then--очистка fifo
-        if (used_words > 0) then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          byte_left <= byte_left - 2;
-        end if;
-        if (byte_left = 0 or byte_left = 1023) then
-          current_state <= state_wait;
-        end if;
+        current_state <= header_analysis;
       end if;
 
-    elsif (current_state = data_edit) then
-      if (cmd_state = B"001") then --Чтение конфигурационных данных
-
-        if (current_state = header_write) then
-          if (header_word_left = B"11") then
-            wrreq_input <= '1';
-            data_s(2 downto 0) <= Cmd;
-            data_s(3) <= FB;
-            data_s(5 downto 4) <= R1;
-            data_s(15 downto 6) <= BCount;
-            data_input <= data_s;
-
-          elsif (header_word_left = B"10") then
-            wrreq_input <= '1';
-            data_s(9 downto 0) <= TID;
-            data_s(10 downto 8) <= AddrValid;
-            data_s(15 downto 11) <= R2;
-            data_input <= data_s;
-          elsif (header_word_left = B"01") then
-            wrreq_input <= '1';
-            data_input <= Addr;
-          end if;
-          header_word_left <= header_word_left - B"01";
-
-        elsif (current_state = data_edit) then
-          WB_WE <= '0';
-          if (WB_Ack = '1') then
-            data_s <= WB_DataIn_0;
-            data_input <= data_s;
-            byte_left <= byte_left - 2;
-          end if;
-        end if;
-
-      elsif (cmd_state = B"010") then--Запись конфигурационных данных
-        if (used_words > 0) then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          WB_Addr <= Addr_write;
-          WB_DataOut <= data_s;
-          WB_WE <= '1';--Сигнал разрешения записи
-          if (byte_left = 1) then
-            WB_Sel <= B"10";--Select
-          else
-            WB_Sel <= B"11";
-          end if;
-          WB_STB <= '1';--корректность
-          WB_CTI <= B"000";
-          byte_left <= byte_left - 2;
-        end if;
-
-      elsif (cmd_state = B"011") then ---- Чтение данных из порта ввода/вывода (FIFO)
-        if (current_state = header_write) then
-          if (header_word_left = B"11") then
-            wrreq_input <= '1';
-            data_s(2 downto 0) <= Cmd;
-            data_s(3) <= FB;
-            data_s(5 downto 4) <= R1;
-            data_s(15 downto 6) <= BCount;
-            data_input <= data_s;
-
-          elsif (header_word_left = B"10") then
-            wrreq_input <= '1';
-            data_s(9 downto 0) <= TID;
-            data_s(10 downto 8) <= AddrValid;
-            data_s(15 downto 11) <= R2;
-            data_input <= data_s;
-          elsif (header_word_left = B"01") then
-            wrreq_input <= '1';
-            data_input <= Addr;
-          end if;
-          header_word_left <= header_word_left - B"01";
-        end if;
-      elsif (current_state = data_edit) then
-        WB_WE <= '0';
-        if (WB_Ack = '1') then
-          data_s <= WB_DataIn_0;
-          data_input <= data_s;
-          byte_left <= byte_left - 2;
-        end if;
-
-      elsif (cmd_state = B"100") then--Запись данных в порт ввода/вывода (FIFO)
-        if (used_words > 0) then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          WB_Addr <= Addr_write;
-          WB_DataOut <= data_s;
-          WB_WE <= '1';--Сигнал разрешения записи
-          if (byte_left = 1) then
-            WB_Sel <= B"10";--Select
-          else
-            WB_Sel <= B"11";
-          end if;
-          WB_STB <= '1';--корректность
-          WB_CTI <= B"000";
-          byte_left <= byte_left - 2;
-        end if;
-
-      elsif (cmd_state = B"101") then-- Чтение данных из памяти
-        if (current_state = header_write) then
-          if (header_word_left = B"11") then
-            wrreq_input <= '1';
-            data_s(2 downto 0) <= Cmd;
-            data_s(3) <= FB;
-            data_s(5 downto 4) <= R1;
-            data_s(15 downto 6) <= BCount;
-            data_input <= data_s;
-
-          elsif (header_word_left = B"10") then
-            wrreq_input <= '1';
-            data_s(9 downto 0) <= TID;
-            data_s(10 downto 8) <= AddrValid;
-            data_s(15 downto 11) <= R2;
-            data_input <= data_s;
-          elsif (header_word_left = B"01") then
-            wrreq_input <= '1';
-            data_input <= Addr;
-          end if;
-          header_word_left <= header_word_left - B"01";
-        end if;
-      elsif (current_state = data_edit) then
-        WB_WE <= '0';
-        if (WB_Ack = '1') then
-          data_s <= WB_DataIn_0;
-          data_input <= data_s;
-          byte_left <= byte_left - 2;
-        end if;
-
-      elsif (cmd_state = B"110") then--Запись данных в память
-        if (used_words > 0) then
-          rdreq_output <= '1';
-          data_s <= q_output;
-          WB_Addr <= Addr_write;
-          WB_DataOut <= data_s;
-          WB_WE <= '1';--Сигнал разрешения записи
-          if (byte_left = 1) then
-            WB_Sel <= B"10";--Select
-          else
-            WB_Sel <= B"11";
-          end if;
-          WB_STB <= '1';--корректность
-          WB_CTI <= B"000";
-          byte_left <= byte_left - 2;
-        end if;
+    end if;
+  end process;
+  ----------------------------------------------------------------------------------------------------------------------
+  process (Clk) begin--Fifo transfer
+    if (rising_edge(Clk)) then
+      if (read_s = '1') then
+        rdreq_output <= read_s;
+        data_r <= q_input;
+      end if;
+      if (write_s = '1') then
+        wrreq_output <= write_s;
+        data_output <= data_r;
       end if;
     end if;
-    end process;
-  end architecture;
+  end process;
+end architecture;
