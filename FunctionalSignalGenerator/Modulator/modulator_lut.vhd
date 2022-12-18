@@ -17,10 +17,10 @@ architecture a_modulator_lut of modulator_lut is
     TYPE int_array is ARRAY (natural range <>) of std_logic_vector(15 downto 0);
 
     CONSTANT lut_qpsk_start_phase : int_array := (
-        X"A000",
-        X"6000",
-        X"E000",
-        X"2000",
+        X"A000", --
+        X"6000", --
+        X"E000", --
+        X"2000", --
 
         X"0000",
         X"0000",
@@ -38,11 +38,11 @@ architecture a_modulator_lut of modulator_lut is
 
     CONSTANT lut_8psk_start_phase : int_array := (
         X"A000",
-        X"8000",
-        X"4000",
-        X"6000",
-        X"C000",
-        X"E000",
+        X"8000",--
+        X"4000",--
+        X"6000",--
+        X"C000",--
+        X"E000",--
         X"2000",
         X"0000",
 
@@ -63,15 +63,15 @@ architecture a_modulator_lut of modulator_lut is
         X"D333",
         X"9333",
         X"A000",
-        X"E666",
+        X"E666",--
         X"E000",
-        X"6000",
+        X"6000",--
         X"5333",
         X"2000",
         X"2666",
-        X"6666",
-        X"6000",
-        X"1333",
+        X"6666",--
+        X"6000",--
+        X"1333",--
         X"2000"
     );
 
@@ -122,15 +122,15 @@ architecture a_modulator_lut of modulator_lut is
         X"DFFF",
         X"DFFF",
         X"7FFF",
-        X"DFFF",
+        X"DFFF",--
         X"7FFF",
+        X"FFFF",--
+        X"DFFF",
         X"FFFF",
         X"DFFF",
-        X"FFFF",
-        X"DFFF",
-        X"DFFF",
+        X"DFFF",--
         X"7FFF",
-        X"DFFF",
+        X"DFFF",--
         X"7FFF"
     );
 
