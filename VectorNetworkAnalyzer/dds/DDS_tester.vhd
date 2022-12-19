@@ -20,107 +20,92 @@ architecture a_DDS_tester of DDS_tester is
 	signal clk_reg: std_logic := '1';
 
 	procedure skiptime_clk(time_count: in integer) is
-    begin
-        count_time: for k in 0 to time_count-1 loop
-            wait until falling_edge(clk_reg); 
-            wait for 200 fs; --need to wait for signal stability, value depends on the Clk frequency. 
-                        --For example, for Clk period = 100 ns (10 MHz) it's ok to wait for 200 ps.
-        end loop count_time ;
-    end;
+	begin
+		count_time: for k in 0 to time_count-1 loop
+			wait until falling_edge(clk_reg); 
+			wait for 200 fs;
+		end loop count_time ;
+	end;
+	
+	procedure stop_wb is
+	begin
+		WB_DataIn <= (others => '0');
+		WB_Cyc <= '0';
+		WB_Addr <= (others => '0');
+		WB_WE <= '0';
+		WB_STB <= '0';
+		WB_Sel <= "00";
+	end;
+	
+	procedure prepare_wb is
+	begin
+		WB_WE <= '1';
+		WB_STB <= '1';
+		WB_CTI <= "000";
+		WB_Cyc <= '1';
+	end;
 	
 	begin 
-		clk_reg <= not clk_reg after clk_period/2;
+		clk_reg <= not clk_reg after clk_period / 2;
 		clk <= clk_reg;
 		
 		tester_process: process 
 			begin 
 				wait for 100 ns;
-				nRst <= '0';
 				
-				skiptime_clk(2); 
+				-- Сброс
+				nRst <= '0';
+				skiptime_clk(2);
+				nRst <= '1';
 				
 				-- Ввод FTW
-				nRst <= '1';
-				WB_DataIn <= (12 => '1', others => '0');
-				WB_Cyc <= '1';
+				prepare_wb;
+				WB_DataIn <= (11 => '1', others => '0');
 				WB_Addr <= (0 => '1', 1 => '1', others => '0');
-				WB_WE <= '1';
-				WB_STB <= '1';
 				WB_Sel <= "11";
-				WB_CTI <= "000";
-				
 				skiptime_clk(2);
-				
-				-- Остановка ввода
-				WB_DataIn <= (others => '0');
-				WB_Cyc <= '0';
-				WB_Addr <= (others => '0');
-				WB_WE <= '0';
-				WB_STB <= '0';
-				WB_Sel <= "00";
+				stop_wb;
 				
 				-- Работа синтезатора
 				wait for 1500 ns;
 				
 				-- Ввод clear = '1'
+				prepare_wb;
 				WB_DataIn <= (0 => '1', others => '0');
-				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
-				WB_WE <= '1';
-				WB_STB <= '1';
 				WB_Sel <= "01";
+				skiptime_clk(2);
+				stop_wb;
 				
-				wait for clk_period;
-				
-				-- Остановка ввода
-				WB_DataIn <= (others => '0');
-				WB_Cyc <= '0';
-				WB_Addr <= (others => '0');
-				WB_WE <= '0';
-				WB_STB <= '0';
-				WB_Sel <= "00";
-				
+				-- Синтезатор не работает
 				wait for 100 ns;
 				
 				-- Ввод clear = '0'
+				prepare_wb;
 				WB_DataIn <= (others => '0');
-				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
-				WB_WE <= '1';
-				WB_STB <= '1';
 				WB_Sel <= "01";
+				skiptime_clk(2);
+				stop_wb;
 				
-				wait for clk_period;
-				
-				-- Остановка ввода
-				WB_DataIn <= (others => '0');
-				WB_Cyc <= '0';
-				WB_Addr <= (others => '0');
-				WB_WE <= '0';
-				WB_STB <= '0';
-				WB_Sel <= "00";
-				WB_CTI <= "000";
-				
+				-- Работа синтезатора с начала
 				wait for 1000 ns;
 				
-				-- Ввод enable = '1'
-				nRst <= '1';
-				WB_DataIn <= (1 => '1', others => '0');
-				WB_Cyc <= '1';
-				WB_Addr <= (others => '0');
-				WB_WE <= '1';
-				WB_STB <= '1';
-				WB_Sel <= "01";
-				WB_CTI <= "000";
-				
+				-- Увеличение частотного слова
+				prepare_wb;
+				WB_DataIn <= (13 => '1', others => '0');
+				WB_Addr <= (0 => '1', 1 => '1', others => '0');
+				WB_Sel <= "11";
 				skiptime_clk(2);
-				WB_DataIn <= (others => '0');
-				WB_Cyc <= '0';
+				stop_wb;
+				
+				-- Ввод enable = '1'
+				prepare_wb;
+				WB_DataIn <= (1 => '1', others => '0');
 				WB_Addr <= (others => '0');
-				WB_WE <= '0';
-				WB_STB <= '0';
-				WB_Sel <= "00";
-				WB_CTI <= "000";
+				WB_Sel <= "01";
+				skiptime_clk(2);
+				stop_wb;
 				
 				wait for 2000 ns;
 		end process;	

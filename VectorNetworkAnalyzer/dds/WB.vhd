@@ -32,48 +32,45 @@ architecture Behavioral of WB is
 	constant ADC_FSC_OFF	: std_logic_vector := x"0000";
 	constant ADC_FTW_OFF	: std_logic_vector := x"0001";
 
-	signal reg_ADC_FTW: std_logic_vector(31 downto 0);
-	signal reg_clear	: std_logic;
-	signal reg_enable	: std_logic;
+	signal ADC_FTW_r: std_logic_vector(31 downto 0);
+	signal clear_r	: std_logic;
+	signal enable_r	: std_logic;
 
 begin
 
-	clear		<= reg_clear;
-	enable	<= reg_enable;
-	ADC_FTW	<= reg_ADC_FTW;
+	clear		<= clear_r;
+	enable	<= enable_r;
+	ADC_FTW	<= ADC_FTW_r;
 	
 	WB_Ack <= WB_STB;
 	
 	process(clk, nRst, WB_STB, WB_WE, WB_Cyc)
 	begin
 		if (nRst = '0') then
-			reg_clear <= '0';
-			reg_enable <= '0';
-			reg_ADC_FTW <= (others => '0');
+			clear_r <= '0';
+			enable_r <= '0';
+			ADC_FTW_r <= (others => '0');
 		elsif(rising_edge(clk) and (WB_STB and WB_WE and WB_Cyc) = '1') then
 			-- classic cycle
 			for k in 0 to 1 loop -- for each 8-byte-word in WB_DataIn
 				if(WB_Sel(k) = '1') then
-					case (WB_Addr + k) is
-						when ADC_FSC_OFF => 
-							-- It is freq syn control
-							reg_clear <= WB_DataIn(8*k);
-							reg_enable<= WB_DataIn(8*k+1);
-						when ADC_FTW_OFF =>
-							-- It is 1st part off FTW
-							reg_ADC_FTW(7 downto 0) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						when ADC_FTW_OFF + 1 =>
-							-- It is 2nd part off FTW
-							reg_ADC_FTW(15 downto 8) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						when ADC_FTW_OFF + 2 =>
-							-- It is 3rd part off FTW
-							reg_ADC_FTW(23 downto 16) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						when ADC_FTW_OFF + 3 =>
-							-- It is 4th part off FTW
-							reg_ADC_FTW(31 downto 24) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						when others =>
-							null; -- nothing to do on other addresses
-					end case;
+					if(WB_Addr + k = ADC_FSC_OFF ) then
+						-- It is freq syn control
+						clear_r <= WB_DataIn(8*k);
+						enable_r<= WB_DataIn(8*k+1);
+					elsif(WB_Addr + k = ADC_FTW_OFF) then
+						-- It is 1st part off FTW
+						ADC_FTW_r(7 downto 0) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+					elsif(WB_Addr + k = ADC_FTW_OFF + 1) then
+						-- It is 2nd part off FTW
+						ADC_FTW_r(15 downto 8) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+					elsif(WB_Addr + k = ADC_FTW_OFF + 2) then
+						-- It is 3rd part off FTW
+						ADC_FTW_r(23 downto 16) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+					elsif(WB_Addr + k = ADC_FTW_OFF + 3) then
+						-- It is 4th part off FTW
+						ADC_FTW_r(31 downto 24) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+					end if;
 				end if;
 			end loop;
 		end if;
