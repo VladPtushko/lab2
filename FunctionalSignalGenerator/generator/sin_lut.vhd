@@ -1,15 +1,16 @@
-LIBRARY IEEE;
-USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.NUMERIC_STD.ALL;
-USE IEEE.MATH_REAL.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_signed.all;
+use ieee.std_logic_unsigned.all;
 
 entity sin_lut is
     port (
-        address_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-		address_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
+        address_a		: IN STD_LOGIC_VECTOR (7 DOWNTO 0) := (others => '0') ;
+		address_b		: IN STD_LOGIC_VECTOR (7 DOWNTO 0) := (others => '0') ;
 		clock		: IN STD_LOGIC  := '1';
-		q_a		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0);
-		q_b		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0)
+		q_a		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0) := (others => '0');
+		q_b		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0) := (others => '0')
     );
 end entity sin_lut;
 
@@ -279,9 +280,9 @@ architecture a_sin_lut of sin_lut is
     SIGNAL lut_address_index_b : integer range 0 to 255;
 
 begin
-    lut_address_index_a <= to_integer(unsigned(address_a));           
-    q_a <= std_logic_vector(to_unsigned(lut(lut_address_index_a), q_a'length));  
+    lut_address_index_a <= CONV_INTEGER(unsigned(address_a));           
+    q_a <= std_logic_vector(CONV_UNSIGNED(lut(lut_address_index_a), q_a'length));  
     
-    lut_address_index_b <= to_integer(unsigned(address_b));           
-    q_b <= std_logic_vector(to_unsigned(lut(lut_address_index_b), q_b'length)); 
+    lut_address_index_b <= CONV_INTEGER(unsigned(address_b));           
+    q_b <= std_logic_vector(CONV_UNSIGNED(lut(lut_address_index_b), q_b'length)); 
 end architecture;

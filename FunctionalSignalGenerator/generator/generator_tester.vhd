@@ -10,7 +10,7 @@ entity generator_tester is
     port(
         clk               : out  std_logic := '0';
         nRst              : out  std_logic := '0';
-        DDS_en_s          : out  std_logic := '0';
+        DDS_en_s          : out  std_logic := '1';
         DDS_mode_s        : out  std_logic_vector(1 downto 0) := (others => '0');
         DDS_amplitude_s   : out  std_logic_vector(15 downto 0) := (others => '1');
         DDS_frequency_s   : out  std_logic_vector(31 downto 0) := (others => '0');
@@ -20,67 +20,74 @@ end entity;
 
 architecture a_generator_tester of generator_tester is
     signal clock_r:std_logic := '0';
+
+    procedure skiptime(time_count: in integer) is
+    begin
+        count_time: for k in 0 to time_count-1 loop
+            wait until falling_edge(clock_r); 
+            wait for 200 ps; --need to wait for signal stability, value depends on the Clk frequency. 
+                        --For example, for Clk period = 100 ns (10 MHz) it's ok to wait for 200 ps.
+        end loop count_time ;
+    end;
 begin
     clock_r <= not clock_r after 10 ns;
     clk <= clock_r;
 
-
     process
     begin
-        nRst <= '1' after 15 ns;
+        skiptime(10);
 
-        DDS_frequency_s <= "00000001000000000000001111111111" after 16 ns;
-        DDS_en_s <= '1' after 17 ns;
-        DDS_mode_s <= "00" after 30 ns;
+        nRst <= '1';
+        DDS_frequency_s <= X"010003FF";
+        skiptime(1000);
+
+
+        DDS_mode_s <= "01";
+        skiptime(1000);
+
+        DDS_mode_s <= "10";
+        skiptime(1000);
+
+        DDS_mode_s <= "00";
+        skiptime(1000);
+
+        DDS_mode_s <= "11";
+
+
+        for k in 1048276-256 to 1048276+256 loop
+            DDS_frequency_s <= conv_std_logic_vector(k * 102400, DDS_frequency_s'length);
+            skiptime(5);
+        end loop;
         
 
-        -- for k in 1048276-256 to 1048276+256 loop
-        --     DDS_frequency_s <= conv_std_logic_vector(k * 102400, DDS_frequency_s'length);
-        --     wait for 1000 ns;
-        -- end loop;
+        DDS_start_phase_s <= X"A0F1";
+        skiptime(1550);
 
-        -- -- DDS_start_phase_s <= X"0001" after 5 ns;
+        DDS_start_phase_s <= X"EFF1";
+        skiptime(1550);
 
-        -- for k in 1048276-256 to 1048276+256 loop
-        --     DDS_frequency_s <= conv_std_logic_vector(k * 102400, DDS_frequency_s'length);
-        --     wait for 1000 ns;
-        -- end loop;
+        DDS_start_phase_s <= X"6FF1";
+        skiptime(1550);
+
+        DDS_start_phase_s <= X"2FFF";
+        skiptime(1550);
+
+        DDS_start_phase_s <= X"0000";
 
 
-        -- for k in 0 to 512 loop
-        --     DDS_start_phase_s <= conv_std_logic_vector(k * 1000, DDS_start_phase_s'length);
-        --     wait for 1000 ns;
-        -- end loop;
+        DDS_frequency_s <= X"010003FF";
 
-        DDS_start_phase_s <=    X"00F1" after 3135 ns,
-                                X"FFF1" after 8635 ns,
-                                X"00F1" after 12145 ns,
-                                X"FFFF" after 13145 ns
-                            ;
-
-        for k in 0 to 11 loop
-            DDS_amplitude_s <= conv_std_logic_vector(k * 1000, DDS_amplitude_s'length);
-            wait for 1000 ns;
+        for k in 0 to 256 loop
+            DDS_amplitude_s <= conv_std_logic_vector(k * 256, DDS_amplitude_s'length);
+            skiptime(10);
         end loop;
 
+        skiptime(100);
+
+        DDS_en_s <= '0';
         
+        skiptime(100);
 
-        for k in 12 to 32 loop
-            DDS_amplitude_s <= conv_std_logic_vector(k * 1000, DDS_amplitude_s'length);
-            wait for 1000 ns;
-        end loop;
-
-        -- DDS_amplitude_s <= X"FFFF" after 16 ns;
-        --                     X"7FFF" after 10000 ns,
-        --                     X"3FFF" after 20000 ns, 
-        --                     X"1FFF" after 30000 ns,
-        --                     X"0FFF" after 40000 ns
-        --                     ;
-        
-
-
-        -- wait for 100 ns;
-        report "Calling 'finish'";
         stop;
     end process;
 end architecture;
