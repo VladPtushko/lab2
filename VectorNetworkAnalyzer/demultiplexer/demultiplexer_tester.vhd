@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
 
-use std.env.finish;
+use std.env.stop;
 
 entity demultiplexer_tester is
     port (
@@ -24,7 +24,7 @@ architecture a_demultiplexer_tester of demultiplexer_tester is
     begin
         count_time: for k in 0 to time_count-1 loop
             wait until falling_edge(Clk_Dataflow_r); 
-            wait for 200 fs; --need to wait for signal stability, value depends on the Clk frequency. 
+            wait for 200 ps; --need to wait for signal stability, value depends on the Clk frequency. 
                         --For example, for Clk period = 100 ns (10 MHz) it's ok to wait for 200 ps.
         end loop count_time ;
     end;
@@ -33,7 +33,7 @@ architecture a_demultiplexer_tester of demultiplexer_tester is
     begin
         count_time: for k in 0 to time_count-1 loop
             wait until falling_edge(Clk_ADC_r); 
-            wait for 200 fs; --need to wait for signal stability, value depends on the Clk frequency. 
+            wait for 200 ps; --need to wait for signal stability, value depends on the Clk frequency. 
                         --For example, for Clk period = 100 ns (10 MHz) it's ok to wait for 200 ps.
         end loop count_time ;
     end;
@@ -84,12 +84,7 @@ begin
             skiptime_ADC(1);
             ADC_SigIn <= conv_std_logic_vector(k, ADC_SigIn'length);
         end loop;
-
-
-        -- wait for 70 ns;
-        report "Calling 'finish'";
-        finish;
+            
+        stop;
     end process;
-    
-
 end architecture;

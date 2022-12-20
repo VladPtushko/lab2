@@ -22,13 +22,13 @@ end entity;
 
 architecture a_demultiplexer of demultiplexer is
     signal DataStrobe_r: std_logic;
-    signal I_v : std_logic_vector(9 downto 0);
-    signal Q_v : std_logic_vector(9 downto 0);
+    signal I_r : std_logic_vector(9 downto 0);
+    signal Q_r : std_logic_vector(9 downto 0);
     signal ConversionStarted_r: std_logic;
     signal IReceived_r: std_logic;
 begin
-    ISigOut <= I_v;
-    QSigOut <= Q_v;
+    ISigOut <= I_r;
+    QSigOut <= Q_r;
 
     DataStrobe <= DataStrobe_r;
 
@@ -37,15 +37,15 @@ begin
         if (nRst = '0') then
             ConversionStarted_r <= '0';
         elsif falling_edge(Clk_ADC) then
-            ConversionStarted_r <= '1';        
+            ConversionStarted_r <= '1';
         end if;    
     end process;
 
     Dataflow_p: process (nRst, Clk_DataFlow)
     begin
         if (nRst = '0') then
-            I_v <= (others => '-');
-            Q_v <= (others => '-');
+            I_r <= (others => '0');
+            Q_r <= (others => '0');
 
             DataStrobe_r <= '0';
             IReceived_r <= '0';
@@ -53,16 +53,16 @@ begin
             if (ConversionStarted_r = '0') then
                 DataStrobe_r <= '0';                
                 IReceived_r <= '0';  
-            elsif (ReceiveDataMode = '0') then
-                I_v <= ADC_SigIn;
-                Q_v <= (others => '0');
-                DataStrobe_r <= '1';
             elsif (IReceived_r = '0') then
-                I_v <= ADC_SigIn;
+                I_r <= ADC_SigIn;
                 DataStrobe_r <= '0';
                 IReceived_r <= '1';
-            else 
-                Q_v <= ADC_SigIn;
+            elsif (ReceiveDataMode = '0') then
+                Q_r <= (others => '0');
+                DataStrobe_r <= '1';
+                IReceived_r <= '0';
+            else
+                Q_r <= ADC_SigIn;
                 DataStrobe_r <= '1';
                 IReceived_r <= '0';
             end if;
