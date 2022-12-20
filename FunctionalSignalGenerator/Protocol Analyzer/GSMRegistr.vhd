@@ -44,67 +44,67 @@ begin
 			DataPort_r <= x"0000";
 		elsif (rising_edge(Clk)) then
 			if(WB_Addr_IN = x"0000") then
-				if(WB_STB_IN and WB_WE_IN and WB_Sel_IN(1)) = '1')
+				if(WB_STB_IN = '1' and WB_WE_IN = '1' and WB_Sel_IN(1) = '1') then
 					QH_r <= WB_Data_IN( 15 downto 8 );
 				else
 					QH_r <= QH_r;
 				end if;
-				if (WB_STB_IN and WB_WE_IN and WB_Sel_IN(0)) = '1')
+				if (WB_STB_IN = '1' and WB_WE_IN = '1' and WB_Sel_IN(0) = '1') then
 					QL_r <= WB_Data_IN( 7 downto 0 );
 				else
 					QL_r <= QL_r;
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT( 15 downto 8 ) <= QH_r;
 					WB_Data_OUT( 7 downto 0 ) <= QL_r;
 				end if;
 			elsif(WB_Addr_IN = x"0200") then
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Amplitude_r <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Amplitude_r;
 				end if;
 			elsif(WB_Addr_IN = x"0202") then
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Start_Phase_r <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Start_Phase_r;
 				end if;
 			elsif(WB_Addr_IN = x"0204") then 
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Carrier_Frequency_r (31 downto 16) <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Carrier_Frequency_r (31 downto 16);
 				end if;
 			elsif(WB_Addr_IN = x"0206") then 
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Carrier_Frequency_r (15 downto 0) <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Carrier_Frequency_r (15 downto 0);
 				end if;
 			elsif(WB_Addr_IN = x"0208") then
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Symbol_Frequency_r (31 downto 16) <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Symbol_Frequency_r (31 downto 16);
 				end if;
 			elsif(WB_Addr_IN = x"020A") then
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					Symbol_Frequency_r (15 downto 0) <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= Symbol_Frequency_r (15 downto 0);
 				end if;
 			elsif(WB_Addr_IN = x"020C") then
-				if(WB_STB_IN and WB_WE_IN) then
+				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					DataPort_r <= WB_Data_IN(15 downto 0);
 				end if;
-				if (WB_WE_IN = '0')
+				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= DataPort_r;
 				end if;
 			end if;
