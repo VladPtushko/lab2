@@ -18,7 +18,8 @@ Amplitude_OUT: out std_logic_vector( 15 downto 0);
 StartPhase_OUT: out std_logic_vector( 15 downto 0);
 CarrierFrequency_OUT: out std_logic_vector(31 downto 0);
 SymbolFrequency_OUT: out std_logic_vector( 31 downto 0);
-DataPort_OUT: out std_logic_vector( 15 downto 0) --идет в FIFO
+DataPort_OUT: out std_logic_vector( 15 downto 0);--идет в FIFO
+wrreq: out std_logic
  );
 end entity GSMRegister;
 architecture Behavior of GSMRegister is
