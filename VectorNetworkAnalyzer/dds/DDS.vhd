@@ -78,7 +78,7 @@ architecture Behavioral of DDS is
 	signal clear	: std_logic;
 	signal enable	: std_logic;
 	
-	signal ACC_reg	: std_logic_vector(31 downto 0);
+	signal ACC_r	: std_logic_vector(31 downto 0);
 
 begin
 
@@ -110,13 +110,13 @@ begin
 		enable	=> enable,
 		clear		=> clear,
 		FTW		=> ADC_FTW,
-		ACC_in	=> ACC_reg,
+		ACC_in	=> ACC_r,
 		
-		ACC_out	=> ACC_reg
+		ACC_out	=> ACC_r
 	);
 	
 	FGen_0:FGen port map(
-		ACC_out		=> ACC_reg,
+		ACC_out		=> ACC_r,
 			
 		fADC			=> ADC_Clk,
 		fDataFlow	=> DataFlow_Clk
