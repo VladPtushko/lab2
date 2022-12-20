@@ -44,6 +44,9 @@ begin
 			Symbol_Frequency_r <= x"00000000";
 			DataPort_r <= x"0000";
 		elsif (rising_edge(Clk)) then
+			if(wrreq = '1') then
+				wrreq <= '0';
+			end if;
 			if(WB_Addr_IN = x"0000") then
 				if(WB_STB_IN = '1' and WB_WE_IN = '1' and WB_Sel_IN(1) = '1') then
 					QH_r <= WB_Data_IN( 15 downto 8 );
@@ -104,6 +107,7 @@ begin
 			elsif(WB_Addr_IN = x"020C") then
 				if(WB_STB_IN = '1' and WB_WE_IN = '1') then
 					DataPort_r <= WB_Data_IN(15 downto 0);
+					wrreq <= '1';
 				end if;
 				if (WB_WE_IN = '0') then
 					WB_Data_OUT <= DataPort_r;
