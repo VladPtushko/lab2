@@ -11,7 +11,7 @@ entity WB is
 		
 		-- Wishbone сигналы
 		WB_Addr		: in	std_logic_vector(15 downto 0);
---		WB_DataOut	: out	std_logic_vector(15 downto 0);
+		WB_DataOut	: out	std_logic_vector(15 downto 0);
 		WB_DataIn	: in	std_logic_vector(15 downto 0);
 		WB_WE			: in	std_logic;
 		WB_Sel		: in	std_logic_vector(1 downto 0);
@@ -51,9 +51,9 @@ begin
 	begin
 		if (nRst = '0') then
 			clear_r <= '0';
-			clear_c <= (others => '0');
 			enable_r <= '0';
 			ADC_FTW_r <= (others => '0');
+			WB_DataOut <= (others => '0');
 		elsif(rising_edge(clk)) then
 			if(clear_r = '1') then
 				if(clear_c = b"000") then
@@ -63,35 +63,67 @@ begin
 				end if;
 			end if;
 			
-			if((WB_STB and WB_WE and WB_Cyc) = '1') then
-				-- classic cycle
-				for k in 0 to 1 loop -- for each 8-bit-word in WB_DataIn
-					if(WB_Sel(k) = '1') then
-						if(WB_Addr + k = ADC_FSC_OFF) then
-							-- It is freq syn control
-							-- Check if clear is now 1
-							if(WB_DataIn(8*k) = '1') then
-								clear_r <= '1';
-								clear_c <= b"101";
-							elsif(WB_DataIn(8*k) = '0') then
-								clear_r <= '0';
+			if ((WB_STB and WB_Cyc) = '1') then 
+			
+				-- Slave reads from master
+				if(WB_WE = '1') then
+					-- classic cycle
+					for k in 0 to 1 loop -- for each 8-bit-word in WB_DataIn
+						if(WB_Sel(k) = '1') then
+							if(WB_Addr + k = ADC_FSC_OFF) then
+								-- It is freq syn control
+								-- Check if clear is now 1
+								if(WB_DataIn(8*k) = '1') then
+									clear_r <= '1';
+									clear_c <= b"101";
+								elsif(WB_DataIn(8*k) = '0') then
+									clear_r <= '0';
+								end if;
+								enable_r<= WB_DataIn(8*k+1);
+							elsif(WB_Addr + k = ADC_FTW_OFF) then
+								-- It is 1st part off FTW
+								ADC_FTW_r(7 downto 0) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 1) then
+								-- It is 2nd part off FTW
+								ADC_FTW_r(15 downto 8) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 2) then
+								-- It is 3rd part off FTW
+								ADC_FTW_r(23 downto 16) <= WB_DataIn(8*(k+1)-1 downto 8*k);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 3) then
+								-- It is 4th part off FTW
+								ADC_FTW_r(31 downto 24) <= WB_DataIn(8*(k+1)-1 downto 8*k);
 							end if;
-							enable_r<= WB_DataIn(8*k+1);
-						elsif(WB_Addr + k = ADC_FTW_OFF) then
-							-- It is 1st part off FTW
-							ADC_FTW_r(7 downto 0) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						elsif(WB_Addr + k = ADC_FTW_OFF + 1) then
-							-- It is 2nd part off FTW
-							ADC_FTW_r(15 downto 8) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						elsif(WB_Addr + k = ADC_FTW_OFF + 2) then
-							-- It is 3rd part off FTW
-							ADC_FTW_r(23 downto 16) <= WB_DataIn(8*(k+1)-1 downto 8*k);
-						elsif(WB_Addr + k = ADC_FTW_OFF + 3) then
-							-- It is 4th part off FTW
-							ADC_FTW_r(31 downto 24) <= WB_DataIn(8*(k+1)-1 downto 8*k);
 						end if;
-					end if;
-				end loop;
+					end loop;
+				end if;
+				
+				-- Master reads from slave
+				if(WB_WE = '0') then
+					-- classic cycle
+					for k in 0 to 1 loop -- for each 8-bit-word in WB_DataIn
+						if(WB_Sel(k) = '1') then
+							if(WB_Addr + k = ADC_FSC_OFF) then
+								WB_DataOut(8*k+1) <= enable_r;
+								WB_DataOut(8*k) <= clear_r;
+								WB_DataOut(8*(k+1)-1 downto 8*k+2) <= b"000000";
+							elsif(WB_Addr + k = ADC_FTW_OFF) then
+								-- It is 1st part off FTW
+								WB_DataOut(8*(k+1)-1 downto 8*k) <= ADC_FTW_r(7 downto 0);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 1) then
+								-- It is 2nd part off FTW
+								WB_DataOut(8*(k+1)-1 downto 8*k) <= ADC_FTW_r(15 downto 8);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 2) then
+								-- It is 3rd part off FTW
+								WB_DataOut(8*(k+1)-1 downto 8*k) <= ADC_FTW_r(23 downto 16);
+							elsif(WB_Addr + k = ADC_FTW_OFF + 3) then
+								-- It is 4th part off FTW
+								WB_DataOut(8*(k+1)-1 downto 8*k) <= ADC_FTW_r(31 downto 24);
+							else
+								WB_DataOut <= (others => '0');
+							end if;
+						end if;
+					end loop;
+				end if;
 			end if;
 		end if;
 	end process;

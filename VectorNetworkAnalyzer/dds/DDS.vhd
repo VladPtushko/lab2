@@ -10,7 +10,7 @@ entity DDS is
 		
 		-- Сигналы WISHBONE
 		WB_Addr		: in	std_logic_vector(15 downto 0);
---		WB_DataOut	: out	std_logic_vector(15 downto 0);
+		WB_DataOut	: out	std_logic_vector(15 downto 0);
 		WB_DataIn	: in	std_logic_vector(15 downto 0);
 		WB_WE			: in	std_logic;
 		WB_Sel		: in	std_logic_vector(1 downto 0);
@@ -57,7 +57,7 @@ architecture Behavioral of DDS is
 			
 			-- Wishbone сигналы
 			WB_Addr		: in	std_logic_vector(15 downto 0);
---			WB_DataOut	: out	std_logic_vector(15 downto 0);
+			WB_DataOut	: out	std_logic_vector(15 downto 0);
 			WB_DataIn	: in	std_logic_vector(15 downto 0);
 			WB_WE			: in	std_logic;
 			WB_Sel		: in	std_logic_vector(1 downto 0);
@@ -89,7 +89,7 @@ begin
 	
 		-- Сигналы WISHBONE
 		WB_Addr		=> WB_Addr,
---		WB_DataOut	=> WB_DataOut,
+		WB_DataOut	=> WB_DataOut,
 		WB_DataIn	=> WB_DataIn,
 		WB_WE			=> WB_WE,
 		WB_Sel		=> WB_Sel,

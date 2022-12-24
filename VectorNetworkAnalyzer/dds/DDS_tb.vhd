@@ -15,6 +15,7 @@ architecture sim of DDS_tb is
 
 	signal WB_Addr			: std_logic_vector(15 downto 0);
 	signal WB_DataIn		: std_logic_vector(15 downto 0);
+	signal WB_DataOut		: std_logic_vector(15 downto 0);
 	signal WB_WE			: std_logic;
 	signal WB_Sel			: std_logic_vector(1 downto 0);
 	signal WB_STB			: std_logic;
@@ -65,6 +66,7 @@ begin
 		clk => clk,
 		nRst => nRst,
 		WB_Addr => WB_Addr,
+		WB_DataOut => WB_DataOut,
 		WB_DataIn => WB_DataIn,
 		WB_WE => WB_WE,
 		WB_Sel => WB_Sel,

@@ -112,6 +112,38 @@ architecture a_DDS_tester of DDS_tester is
 				WB_STB <= '0';
 				WB_Sel <= "00";
 				
+				-- Мастер считывает с раба
+				WB_WE <= '0';
+				WB_STB <= '1';
+				WB_CTI <= "000";
+				WB_Cyc <= '1';
+				WB_Addr <= (others => '0');
+				WB_Sel <= "01";
+				skiptime_clk(2);
+				WB_DataIn <= (others => '0');
+				WB_Cyc <= '0';
+				WB_Addr <= (others => '0');
+				WB_WE <= '0';
+				WB_STB <= '0';
+				WB_Sel <= "00";
+				
+				skiptime_clk(5);
+				
+				WB_WE <= '0';
+				WB_STB <= '1';
+				WB_CTI <= "000";
+				WB_Cyc <= '1';
+				WB_DataIn <= (13 => '1', others => '0');
+				WB_Addr <= x"0001";
+				WB_Sel <= "11";
+				skiptime_clk(2);
+				WB_DataIn <= (others => '0');
+				WB_Cyc <= '0';
+				WB_Addr <= (others => '0');
+				WB_WE <= '0';
+				WB_STB <= '0';
+				WB_Sel <= "00";
+				
 				skiptime_clk(100);
 		end process;	
 
