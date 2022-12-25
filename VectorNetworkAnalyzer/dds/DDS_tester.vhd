@@ -33,12 +33,23 @@ architecture a_DDS_tester of DDS_tester is
 		
 		tester_process: process 
 			begin 
+				WB_Addr <= (others => '0');
+				WB_DataIn <= (others => '0');
+				WB_WE  <= '0';
+				WB_Sel <= (others => '0');
+				WB_STB <= '0';
+				WB_Cyc <= '0';
+				WB_CTI <= (others => '0');
+				nRst <= '1';
+				
 				skiptime_clk(5);
 				
 				-- Сброс
 				nRst <= '0';
 				skiptime_clk(2);
 				nRst <= '1';
+				
+				skiptime_clk(3);
 				
 				-- Ввод FTW
 				WB_WE <= '1';
@@ -135,11 +146,9 @@ architecture a_DDS_tester of DDS_tester is
 				WB_STB <= '1';
 				WB_CTI <= "000";
 				WB_Cyc <= '1';
-				WB_DataIn <= (13 => '1', others => '0');
-				WB_Addr <= x"0001";
+				WB_Addr <= x"0003";
 				WB_Sel <= "11";
 				skiptime_clk(2);
-				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
 				WB_WE <= '0';
