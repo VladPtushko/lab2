@@ -112,6 +112,8 @@ architecture a_DDS_tester of DDS_tester is
 				WB_STB <= '0';
 				WB_Sel <= "00";
 				
+				skiptime_clk(2);
+				
 				-- Мастер считывает с раба
 				WB_WE <= '0';
 				WB_STB <= '1';
