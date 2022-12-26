@@ -40,15 +40,6 @@ architecture Behavior of GSMRegister is
 	signal wrreq_r: std_logic;
 
 begin
-		PRT_O( 15 downto 8 ) <= QH_r;
-		PRT_O( 7 downto 0 ) <= QL_r;
-		Amplitude_OUT <= Amplitude_r;
-		StartPhase_OUT <= Start_Phase_r;
-		CarrierFrequency_OUT <= Carrier_Frequency_r;
-		SymbolFrequency_OUT <= Symbol_Frequency_r;
-		DataPort_OUT <= DataPort_r;
-		wrreq <= wrreq_r;
-		WB_Ack <= Ack_r;
 		
 		process(clk,nRst, WB_STB, WB_WE, WB_Cyc)
 		begin
@@ -137,7 +128,14 @@ begin
 					Ack_r <= '0';
 				end if;
 			end if;
-			WB_Ack <= Ack_r;
 		end process;
- 
+ 	PRT_O( 15 downto 8 ) <= QH_r;
+	PRT_O( 7 downto 0 ) <= QL_r;
+	Amplitude_OUT <= Amplitude_r;
+	StartPhase_OUT <= Start_Phase_r;
+	CarrierFrequency_OUT <= Carrier_Frequency_r;
+	SymbolFrequency_OUT <= Symbol_Frequency_r;
+	DataPort_OUT <= DataPort_r;
+	wrreq <= wrreq_r;
+	WB_Ack <= Ack_r;
 end architecture Behavior;
