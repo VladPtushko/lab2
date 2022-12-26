@@ -137,6 +137,7 @@ begin
 					Ack_r <= '0';
 				end if;
 			end if;
+			WB_Ack <= Ack_r;
 		end process;
  
 end architecture Behavior;
