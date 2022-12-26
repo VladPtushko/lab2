@@ -88,7 +88,8 @@ begin
 	WB_Sel => WB_Sel,
 	WB_Cyc => WB_Cyc,
 	WB_STB => WB_STB,
-	WB_CTI => WB_CTI
+	WB_CTI => WB_CTI,
+	WB_Ack => WB_Ack
 	);
 	
 end architecture;

@@ -11,7 +11,8 @@ entity DDS_tester is
 		WB_Sel		: out	std_logic_vector(1 downto 0);
 		WB_STB		: out	std_logic;
 		WB_Cyc		: out	std_logic;
-		WB_CTI		: out	std_logic_vector(2 downto 0)
+		WB_CTI		: out	std_logic_vector(2 downto 0);
+		WB_Ack		: in	std_logic
 	);
 end entity DDS_tester;
 
@@ -22,7 +23,7 @@ architecture a_DDS_tester of DDS_tester is
 	procedure skiptime_clk(time_count: in integer) is
 	begin
 		count_time: for k in 0 to time_count-1 loop
-			wait until falling_edge(clk_r); 
+			wait until falling_edge(clk_r);
 			wait for 200 fs;
 		end loop count_time ;
 	end;
@@ -52,6 +53,8 @@ architecture a_DDS_tester of DDS_tester is
 				skiptime_clk(3);
 				
 				-- Ввод FTW
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_CTI <= "000";
@@ -59,7 +62,8 @@ architecture a_DDS_tester of DDS_tester is
 				WB_DataIn <= (11 => '1', others => '0');
 				WB_Addr <= (0 => '1', 1 => '1', others => '0');
 				WB_Sel <= "11";
-				skiptime_clk(2);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -71,6 +75,8 @@ architecture a_DDS_tester of DDS_tester is
 				skiptime_clk(88);
 				
 				-- Ввод clear = '1'
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_CTI <= "000";
@@ -78,7 +84,8 @@ architecture a_DDS_tester of DDS_tester is
 				WB_DataIn <= (0 => '1', others => '0');
 				WB_Addr <= (others => '0');
 				WB_Sel <= "01";
-				skiptime_clk(1);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -90,6 +97,8 @@ architecture a_DDS_tester of DDS_tester is
 				skiptime_clk(63);
 				
 				-- Увеличение частотного слова
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_CTI <= "000";
@@ -97,7 +106,8 @@ architecture a_DDS_tester of DDS_tester is
 				WB_DataIn <= (13 => '1', others => '0');
 				WB_Addr <= (0 => '1', 1 => '1', others => '0');
 				WB_Sel <= "11";
-				skiptime_clk(2);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -105,9 +115,11 @@ architecture a_DDS_tester of DDS_tester is
 				WB_STB <= '0';
 				WB_Sel <= "00";
 				
-				skiptime_clk(88);
+				skiptime_clk(85);
 				
 				-- Ввод enable = '1'
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_CTI <= "000";
@@ -115,7 +127,8 @@ architecture a_DDS_tester of DDS_tester is
 				WB_DataIn <= (1 => '1', others => '0');
 				WB_Addr <= (others => '0');
 				WB_Sel <= "01";
-				skiptime_clk(2);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -125,14 +138,17 @@ architecture a_DDS_tester of DDS_tester is
 				
 				skiptime_clk(2);
 				
-				-- Мастер считывает с раба
+				-- Считывание с модуля управляющего регистра
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_CTI <= "000";
 				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
 				WB_Sel <= "01";
-				skiptime_clk(2);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
@@ -142,13 +158,37 @@ architecture a_DDS_tester of DDS_tester is
 				
 				skiptime_clk(5);
 				
+				-- Считывание верхних байтов FTW
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_CTI <= "000";
 				WB_Cyc <= '1';
 				WB_Addr <= x"0003";
 				WB_Sel <= "11";
-				skiptime_clk(2);
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
+				WB_Cyc <= '0';
+				WB_Addr <= (others => '0');
+				WB_WE <= '0';
+				WB_STB <= '0';
+				WB_Sel <= "00";
+				
+				skiptime_clk(5);
+				
+				-- Ввод управляющего регистра с clear = 0 и enable = 0
+				wait until rising_edge(clk_r); 
+				wait for 200 fs;
+				WB_WE <= '1';
+				WB_STB <= '1';
+				WB_CTI <= "000";
+				WB_Cyc <= '1';
+				WB_DataIn <= x"0000";
+				WB_Addr <= x"0000";
+				WB_Sel <= "01";
+				wait until rising_edge(clk_r) and WB_Ack = '1'; 
+				wait for 200 fs;
 				WB_Cyc <= '0';
 				WB_Addr <= (others => '0');
 				WB_WE <= '0';
