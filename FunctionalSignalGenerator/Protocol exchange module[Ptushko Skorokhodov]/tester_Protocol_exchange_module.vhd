@@ -35,66 +35,91 @@ Clk, nRst:  out std_logic;
 end entity;
 
 architecture rlt of tester_Protocol_exchange_module is
-	signal TbClock: std_logic := '1';
+	
 	signal rst: std_logic := '1';
 	
 
 	
 	--FIFO
-	signal sig_q_input: std_logic_vector (15 downto 0):="0000000000000000";
-	signal read_fb0: std_logic_vector(15 downto 0) := "0000000101000001";
-	signal read_fb1: std_logic_vector(15 downto 0) := "0000000110001001";
-	signal package_1: std_logic_vector(15 downto 0) := "1111111111111111";
+	signal sig_q_input: std_logic_vector (15 downto 0):="0000000000000001";
+	signal read_fb0: std_logic_vector(15 downto 0) := "0000000110000001";
 	signal addr_cor: std_logic_vector(15 downto 0) := "0000000000000000";
 	signal addr_incor: std_logic_vector(15 downto 0) := "1111111111111111";
-	signal sig_usedw_output_fi:std_logic_vector (10 downto 0):="00000000011";
-	signal sig_usedw_output_fo:std_logic_vector (10 downto 0):="00000000011";
+	signal sig_usedw_output_5:std_logic_vector (10 downto 0):="00000000101";
+	signal sig_usedw_output_4:std_logic_vector (10 downto 0):="00000000100";
+	signal sig_usedw_output_3:std_logic_vector (10 downto 0):="00000000011";
+	signal sig_usedw_output_zero:std_logic_vector (10 downto 0):="00000000000";
+	signal sig_usedw_output_2:std_logic_vector (10 downto 0):="00000000010";
+	signal sig_usedw_output_1:std_logic_vector (10 downto 0):="00000000001";
 	
 	--WISHBONE
 	signal ack: std_logic := '1';
 	signal package_data_1: std_logic_vector(15 downto 0) := "1111111111111111";
-	signal package_data_2: std_logic_vector(15 downto 0) := "0000000011111111";
-	signal package_data_3: std_logic_vector(15 downto 0) := "0000000000000000";
+	signal package_data_2: std_logic_vector(15 downto 0) := "0000000000000000";
 
-	constant TbPeriod : time := 100 ps;
-	signal TbSimEnded : std_logic := '0';
+	signal Clk_r: std_logic := '1';
+
+	procedure skiptime(time_count: in integer) is
+    		begin
+        		count_time: for k in 0 to time_count-1 loop
+            		wait until falling_edge(Clk_r); 
+            		wait for 50 ps; --need to wait for signal stability, value depends on the Clk frequency. 
+                        --For example, for Clk period = 100 ns (10 MHz) it's ok to wait for 200 ps.
+        	end loop count_time ;
+    	end;
+
+	
 	begin
-		TbClock <= not TbClock after TbPeriod/2 when TbSimEnded /= '1' else '0';
-		Clk <= TbClock;
+		Clk_r <= not Clk_r after 50 ps;
+		Clk <= Clk_r;
 		
 		
 		process is
 				
 			begin
 			q_input <= addr_cor;
-			usedw_input_fi <= sig_usedw_output_fi;
-			usedw_input_fo <= sig_usedw_output_fo;
+			usedw_input_fi <= sig_usedw_output_zero;
+			usedw_input_fo <= sig_usedw_output_zero;
 			nRst <= not rst;
-			wait for 100 ps;
+			WB_Ack <= not ack;
+			skiptime(1);
 			nRst <=  rst;
-			wait for 300 ps;
+			usedw_input_fi <= sig_usedw_output_3;
+			skiptime(3);
 			q_input <= read_fb0;
-			wait for 100 ps;
+			usedw_input_fi <= sig_usedw_output_2;
+			skiptime(1);
 			q_input <= addr_incor;
-			wait for 100 ps;
-			q_input <= addr_cor;
-			wait for 1000 ps;
+			usedw_input_fi <= sig_usedw_output_1;
+			skiptime(1);
+			q_input <= sig_q_input;
+			usedw_input_fi <= sig_usedw_output_zero;
+			skiptime(6);
+			usedw_input_fo <= sig_usedw_output_1;
+			skiptime(1);
+			usedw_input_fo <= sig_usedw_output_2;
+			skiptime(1);
+			usedw_input_fo <= sig_usedw_output_3;
+			skiptime(2);
 			WB_Ack <= ack;
 			WB_DataIn_0 <= package_data_1;
-			wait for 100 ps;
+			skiptime(1);
 			WB_Ack <= not ack;
-			wait for 100 ps;
+			skiptime(1);
 			WB_Ack <= ack;
 			WB_DataIn_0 <= package_data_2;
-			wait for 100 ps;
+			usedw_input_fo <= sig_usedw_output_4;
+			skiptime(1);
 			WB_Ack <= not ack;
-			wait for 100 ps;
+			skiptime(1);
 			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_3;
-			wait for 100 ps;
+			WB_DataIn_0 <= package_data_1;
+			usedw_input_fo <= sig_usedw_output_5;
+			skiptime(1);
 			WB_Ack <= not ack;
-			wait for 100 * TbPeriod;
-			TbSimEnded <= '1';
+			skiptime(1);
+			usedw_input_fo <= sig_usedw_output_zero;
+			skiptime(100);
  			wait;
 		end process;
 	end architecture;
