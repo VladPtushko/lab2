@@ -9,8 +9,9 @@ entity GSMRegistr_tester is
         WB_Sel: out std_logic_vector( 1 downto 0 );
         WB_STB : out std_logic;
         WB_WE: out std_logic;
-	WB_Cyc		: out	std_logic;
-	WB_CTI		: out	std_logic_vector(2 downto 0);
+	WB_Cyc	: out	std_logic;
+	WB_CTI	: out	std_logic_vector(2 downto 0);
+	rdreq : out STD_LOGIC
     );
 end entity GSMRegistr_tester;
 
