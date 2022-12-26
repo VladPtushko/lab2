@@ -13,6 +13,8 @@ entity GSMRegistr_top is
         WB_Sel_IN: in std_logic_vector( 1 downto 0 );
         WB_STB_IN: in std_logic;
         WB_WE_IN: in std_logic;
+	WB_Cyc		: in	std_logic;
+	WB_CTI		: in	std_logic_vector(2 downto 0);
     
         PRT_O: out std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
         Amplitude_OUT: out std_logic_vector( 15 downto 0);
@@ -41,6 +43,8 @@ architecture rtl of GSMRegistr_top is
         WB_Sel_IN : in std_logic_vector( 1 downto 0 );
         WB_STB_IN : in std_logic;
         WB_WE_IN : in std_logic;
+	WB_Cyc		: in	std_logic;
+	WB_CTI		: in	std_logic_vector(2 downto 0);
         PRT_O : out std_logic_vector( 15 downto 0 );
         Amplitude_OUT : out std_logic_vector( 15 downto 0);
         StartPhase_OUT : out std_logic_vector( 15 downto 0);
@@ -78,6 +82,8 @@ begin
             WB_Sel_IN => WB_Sel_IN,
             WB_STB_IN => WB_STB_IN,
             WB_WE_IN => WB_WE_IN,
+	    WB_Cyc => WB_Cyc,
+	    WB_CTI => WB_CTI,
             PRT_O => PRT_O,
             Amplitude_OUT => Amplitude_OUT,
             StartPhase_OUT => StartPhase_OUT,
