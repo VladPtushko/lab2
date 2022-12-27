@@ -52,7 +52,7 @@ begin
 					wrreq_dop_r <= wrreq_r;
 				end if;
 			end if;
-		end
+		end process;
 		
 		process(clk,nRst, WB_STB, WB_WE, WB_Cyc)
 		begin
@@ -69,16 +69,15 @@ begin
 				WB_DataOut_r <= "0000000000000000";
 			elsif (rising_edge(clk)) then
 			
-			if ((WB_STB and WB_Cyc) = '1') then
-				if(Ack_r = '0') then
-					Ack_r <= '1';
+				if ((WB_STB and WB_Cyc) = '1') then
+					if(Ack_r = '0') then
+						Ack_r <= '1';
+					else
+						Ack_r <= '0';
+					end if;
 				else
 					Ack_r <= '0';
 				end if;
-			else
-				Ack_r <= '0';
-			end if;
-				
 			if (WB_Cyc = '1') then 
 				if(WB_WE = '1' and WB_STB = '1') then
 					if(WB_Addr = x"0000") then
@@ -128,6 +127,7 @@ begin
 						WB_DataOut_r <= DataPort_r;
 					end if;
 				end if;
+			end if;
 			end if;
 		end process;
  	PRT_O( 15 downto 8 ) <= QH_r;
