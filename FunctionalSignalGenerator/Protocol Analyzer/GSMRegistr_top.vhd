@@ -13,8 +13,8 @@ entity GSMRegistr_top is
         WB_Sel: in std_logic_vector( 1 downto 0 );
         WB_STB: in std_logic;
         WB_WE: in std_logic;
-	WB_Cyc		: in	std_logic;
-	WB_CTI		: in	std_logic_vector(2 downto 0);
+		  WB_Cyc		: in	std_logic;
+		  WB_CTI		: in	std_logic_vector(2 downto 0);
     
         PRT_O: out std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
         Amplitude_OUT: out std_logic_vector( 15 downto 0);
@@ -70,8 +70,9 @@ architecture rtl of GSMRegistr_top is
 		wrreq						: out 	std_logic;
 		full : in std_logic
 	);
-	
+	end component;
     signal wrreq : std_logic;
+	 signal full_r : std_logic;
     signal DataPort_r: std_logic_vector( 15 downto 0 );
 begin
     GSMRegister_inst : GSMRegister
@@ -94,7 +95,7 @@ begin
         SymbolFrequency_OUT => SymbolFrequency_OUT,
         DataPort_OUT => DataPort_r,
         wrreq => wrreq,
-		full => full
+		  full => full_r
     );
 
 
@@ -105,7 +106,7 @@ begin
             rdreq => rdreq,
             wrreq => wrreq,
             empty => empty,
-            full => full,
+            full => full_r,
             q => q,
             usedw => usedw
         );
