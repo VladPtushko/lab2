@@ -55,7 +55,7 @@ architecture tb_Protocol_exchange_module_arch of tb_Protocol_exchange_module is
 					WB_STB => WB_STB,
 					WB_Cyc_0 => WB_Cyc_0,
 					WB_Cyc_1 => WB_Cyc_1,
-					WB_Cyc_2 => WB_Cyc_1,
+					WB_Cyc_2 => WB_Cyc_2,
 					WB_Cyc_3 => WB_Cyc_3,
 					WB_Ack => WB_Ack,
 					WB_CTI => WB_CTI
@@ -83,7 +83,7 @@ architecture tb_Protocol_exchange_module_arch of tb_Protocol_exchange_module is
 					WB_STB => WB_STB,
 					WB_Cyc_0 => WB_Cyc_0,
 					WB_Cyc_1 => WB_Cyc_1,
-					WB_Cyc_2 => WB_Cyc_1,
+					WB_Cyc_2 => WB_Cyc_2,
 					WB_Cyc_3 => WB_Cyc_3,
 					WB_Ack => WB_Ack,
 					WB_CTI => WB_CTI
