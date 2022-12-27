@@ -63,16 +63,15 @@ begin
 					if(Ack_r = '1') then
 						Ack_r <= '0';
 					else
+						Ack_r <= '1';
 						if(WB_Addr = x"0000") then
 							if(WB_WE = '1' and WB_Sel(1) = '1') then
 								QH_r <= WB_DataIn( 15 downto 8 );
-								Ack_r <= '1';
 							else
 								QH_r <= QH_r;
 							end if;
 							if (WB_WE = '1' and WB_Sel(0) = '1') then
 								QL_r <= WB_DataIn( 7 downto 0 );
-								Ack_r <= '1';
 							else
 								QL_r <= QL_r;
 							end if;
@@ -83,49 +82,42 @@ begin
 						elsif(WB_Addr = x"0200") then
 							if(WB_WE = '1') then
 								Amplitude_r <= WB_DataIn;
-								Ack_r <= '1';
 							elsif(WB_WE = '0') then
 								WB_DataOut_r <= Amplitude_r;
 							end if;
 						elsif(WB_Addr = x"0202") then
 							if(WB_WE = '1') then
-								Start_Phase_r <= WB_DataIn;
-								Ack_r <= '1';
+								Start_Phase_r <= WB_DataI
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Start_Phase_r;
 							end if;
 						elsif(WB_Addr = x"0204") then 
 							if(WB_WE = '1') then
 								Carrier_Frequency_r (31 downto 16) <= WB_DataIn;
-								Ack_r <= '1';
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Carrier_Frequency_r (31 downto 16);
 							end if;
 						elsif(WB_Addr = x"0206") then 
 							if(WB_WE = '1') then
 								Carrier_Frequency_r (15 downto 0) <= WB_DataIn;
-								Ack_r <= '1';
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Carrier_Frequency_r (15 downto 0);
 							end if;
 						elsif(WB_Addr = x"0208") then
 							if(WB_WE = '1') then
 								Symbol_Frequency_r (31 downto 16) <= WB_DataIn;
-								Ack_r <= '1';
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Symbol_Frequency_r (31 downto 16);
 							end if;
 						elsif(WB_Addr = x"020A") then
 							if(WB_WE = '1') then
 								Symbol_Frequency_r (15 downto 0) <= WB_DataIn;
-								Ack_r <= '1';
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Symbol_Frequency_r (15 downto 0);
 							end if;
 						elsif(WB_Addr = x"020C") then
 							if(WB_WE = '1') then
 								DataPort_r <= WB_DataIn;
-								Ack_r <= '1';
 								wrreq_r <= '1';
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= DataPort_r;
