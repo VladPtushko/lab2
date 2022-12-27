@@ -75,6 +75,7 @@ architecture rtl of GSMRegistr_top is
 	 signal full_r : std_logic;
     signal DataPort_r: std_logic_vector( 15 downto 0 );
 begin
+		full <= full_r;
     GSMRegister_inst : GSMRegister
     port map (
         clk => clk,
@@ -97,7 +98,7 @@ begin
         wrreq => wrreq,
 		  full => full_r
     );
-
+						
 
     GSMRegistr_FIFO_inst : GSMRegistr_FIFO
         port map (
