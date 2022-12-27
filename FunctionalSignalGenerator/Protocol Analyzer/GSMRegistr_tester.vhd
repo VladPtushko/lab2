@@ -61,6 +61,9 @@ begin
 				WB_DataIn <= "0110000010011100";
 				WB_Addr <= (others => '0');
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(5);
 				WB_DataIn <= "1000100000101001";
 				WB_Cyc <= '1';
@@ -68,6 +71,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(5);
 				WB_DataIn <= "0010100100000000";
 				WB_Cyc <= '1';
@@ -75,6 +81,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "10";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x0200
@@ -85,6 +94,9 @@ begin
 				WB_DataIn <= "0010100101011100";
 				WB_Addr <= (9 => '1', others => '0');
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -94,6 +106,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "10";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(10);
 				--for 0x0202
@@ -103,6 +118,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -112,6 +130,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "10";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x0204
@@ -121,6 +142,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -129,6 +153,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x0206
@@ -138,6 +165,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -146,6 +176,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x0208
@@ -155,6 +188,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -163,6 +199,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x020A
@@ -172,6 +211,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -180,6 +222,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(10);
 				
 				--for 0x020C
@@ -189,6 +234,9 @@ begin
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				
 				skiptime_clk(5);
 				
@@ -197,6 +245,9 @@ begin
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
 				skiptime_clk(100);
 		end process;	
 
