@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
 
 entity Serializer is
     Port 
@@ -96,7 +96,7 @@ begin
 			
 			
 			-- DETECTING COUNT INCREASING WHEN NOT READING
-			if  to_integer(unsigned(usedw_count)) > 0 and input_number_count = -1 then
+			if  CONV_INTEGER(unsigned(usedw_count)) > 0 and input_number_count = -1 then
 				input_number_count <= 0;
 			end if;
 			
