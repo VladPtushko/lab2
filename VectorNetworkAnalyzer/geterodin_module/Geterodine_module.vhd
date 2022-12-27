@@ -30,9 +30,30 @@ architecture geterodine_module_arch of Geterodine_module is
      signal I_temp : std_logic_vector(9 downto 0);
      signal Q_temp : std_logic_vector(9 downto 0);
 
+      
+		component separator is
 
+      port(
+		        Clk   : in std_logic;
+        nRst: in std_logic;
+        ReceiveDataMode: in std_logic;
+		  DataStrobe: in std_logic;
 
-       
+        ISig_In: in std_logic_vector(9 downto 0);
+		  QSig_In: in std_logic_vector(9 downto 0);
+		  
+		  
+
+        IData_Out: out std_logic_vector(9 downto 0);
+        QData_Out: out std_logic_vector(9 downto 0);
+
+        DataValid: out std_logic
+		
+		
+		
+		
+		  );
+		  end component;
 
 
       component fir_filter_4 is
@@ -49,6 +70,21 @@ end component;
 begin
 
 
+ 
+ 
+ 
+ 
+   separate: separator port map(
+	Clk => Clk,
+		nRst => nRst,
+		ReceiveDataMode => ReceiveDataMode,
+		DataStrobe => DataStrobe,
+		ISig_In => ISig_In,
+		QSig_In => QSig_In,
+		IData_Out => I_temp,
+		QData_Out => Q_temp,
+		DataValid => DataValid
+);
 
 	 
 	 
@@ -77,8 +113,6 @@ begin
       -- filtered data 
 	o_data   => QData_Out  
 		);
-
-
 
 end geterodine_module_arch;
 
