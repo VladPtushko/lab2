@@ -66,7 +66,7 @@ begin
         StartPhase_OUT => StartPhase_OUT,
         CarrierFrequency_OUT => CarrierFrequency_OUT,
         SymbolFrequency_OUT => SymbolFrequency_OUT,
-        DataPort_OUT => q,
+        DataPort_OUT => DataPort_r,
         wrreq => wrreq
     );
 
