@@ -38,8 +38,21 @@ architecture Behavior of GSMRegister is
 	signal DataPort_r: std_logic_vector( 15 downto 0 ); -- пойдет в ФИФО
 	signal Ack_r: std_logic;
 	signal wrreq_r: std_logic;
-
+	signal wrreq_dop_r: std_logic; 
 begin
+		
+		process(clk,nRst)
+		begin
+			if (nRst = '0') then
+				wrreq_dop_r <= '0';
+			elsif (rising_edge(clk)) then
+				if (wrreq_dop_r = '1') then
+					wrreq_dop_r <= '0';
+				else
+					wrreq_dop_r <= wrreq_r;
+				end if;
+			end if;
+		end
 		
 		process(clk,nRst, WB_STB, WB_WE, WB_Cyc)
 		begin
@@ -55,15 +68,18 @@ begin
 				Ack_r <= '0';
 				WB_DataOut_r <= "0000000000000000";
 			elsif (rising_edge(clk)) then
-				if(wrreq_r = '1') then
-					wrreq_r <= '0';
+			
+			if ((WB_STB and WB_Cyc) = '1') then
+				if(Ack_r = '0') then
+					Ack_r <= '1';
+				else
+					Ack_r <= '0';
 				end if;
+			else
+				Ack_r <= '0';
+			end if;
 				
 				if ((WB_STB and WB_Cyc) = '1') then 
-					if(Ack_r = '1') then
-						Ack_r <= '0';
-					else
-						Ack_r <= '1';
 						if(WB_Addr = x"0000") then
 							if(WB_WE = '1' and WB_Sel(1) = '1') then
 								QH_r <= WB_DataIn( 15 downto 8 );
@@ -87,7 +103,7 @@ begin
 							end if;
 						elsif(WB_Addr = x"0202") then
 							if(WB_WE = '1') then
-								Start_Phase_r <= WB_DataIn;
+								Start_Phase_r <= WB_DataI
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Start_Phase_r;
 							end if;
@@ -125,9 +141,9 @@ begin
 						end if;
 					end if;
 						
-				else
-					Ack_r <= '0';
-				end if;
+				--else
+				--	Ack_r <= '0';
+				--end if;
 			end if;
 		end process;
  	PRT_O( 15 downto 8 ) <= QH_r;
@@ -137,7 +153,7 @@ begin
 	CarrierFrequency_OUT <= Carrier_Frequency_r;
 	SymbolFrequency_OUT <= Symbol_Frequency_r;
 	DataPort_OUT <= DataPort_r;
-	wrreq <= wrreq_r;
+	wrreq <= wrreq_dop_r;
 	WB_Ack <= Ack_r;
 	WB_DataOut <= WB_DataOut_r;
 end architecture Behavior;
