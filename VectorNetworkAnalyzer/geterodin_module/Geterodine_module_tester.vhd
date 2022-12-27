@@ -18,7 +18,7 @@ entity Geterodine_module_tester is
 end entity Geterodine_module_tester;
 
 architecture a_Geterodine_module_tester of Geterodine_module is
-    signal Clk_r: std_logic := '0';
+    signal Clk_r: std_logic := '0'; 
   
 
     procedure skiptime_Dataflow(time_count: in integer) is
@@ -49,15 +49,14 @@ begin
         
         for k in 1023 downto 1023-6 loop
             skiptime_Dataflow(1);
-            ISig_In <= conv_std_logic_vector(k, ADC_SigIn'length);
-            Qsig_In <= conv_std_logic_vector(k, ADC_SigIn'length);
+            ISig_In <= conv_std_logic_vector(k, ISig_In'length);
+            Qsig_In <= conv_std_logic_vector(k, QSig_In'length);
         end loop;
             
         ReceiveDataMode <= '0';
         Qsig_In <= "0000000000";
         for k in 1023 downto 1023-3 loop
-            skiptime_ADC(1);
-            ADC_SigIn <= conv_std_logic_vector(k, ADC_SigIn'length);
+            ISig_In <= conv_std_logic_vector(k, ISig_In'length);
         end loop;
         nRst <= '0';
         ReceiveDataMode <= '1';
@@ -65,14 +64,14 @@ begin
 
         for k in 1023 downto 1023-6 loop
             skiptime_Dataflow(1);
-            ISig_In <= conv_std_logic_vector(k, ADC_SigIn'length);
-            Qsig_In <= conv_std_logic_vector(k, ADC_SigIn'length);
+            ISig_In <= conv_std_logic_vector(k, ISig_In'length);
+            Qsig_In <= conv_std_logic_vector(k, QSig_In'length);
         end loop;
             
         ReceiveDataMode <= '0';
         Qsig_In <= "0000000000";
         for k in 1023 downto 1023-3 loop
-           ISig_In <= conv_std_logic_vector(k, ADC_SigIn'length);
+           ISig_In <= conv_std_logic_vector(k, ISig_In'length);
         end loop;
             
         stop;
