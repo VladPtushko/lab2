@@ -32,7 +32,7 @@ architecture Behavior of GSMRegister is
 	signal QL_r: std_logic_vector( 7 downto 0 );
 	signal Amplitude_r: std_logic_vector( 15 downto 0 );
 	signal Start_Phase_r: std_logic_vector( 15 downto 0 );
- 
+	signal WB_DataOut_r: std_logic_vector(15 downto 0);
 	signal Carrier_Frequency_r: std_logic_vector( 31 downto 0 );
 	signal Symbol_Frequency_r: std_logic_vector( 31 downto 0 );
 	signal DataPort_r: std_logic_vector( 15 downto 0 ); -- пойдет в ФИФО
@@ -53,7 +53,7 @@ begin
 				DataPort_r <= x"0000";
 				wrreq_r <= '0';
 				Ack_r <= '0';
-				
+				WB_DataOut_r <= "0000000000000000";
 			elsif (rising_edge(clk)) then
 				if(wrreq_r = '1') then
 					wrreq_r <= '0';
@@ -66,60 +66,69 @@ begin
 						if(WB_Addr = x"0000") then
 							if(WB_WE = '1' and WB_Sel(1) = '1') then
 								QH_r <= WB_DataIn( 15 downto 8 );
+								Ack_r <= '1';
 							else
 								QH_r <= QH_r;
 							end if;
 							if (WB_WE = '1' and WB_Sel(0) = '1') then
 								QL_r <= WB_DataIn( 7 downto 0 );
+								Ack_r <= '1';
 							else
 								QL_r <= QL_r;
 							end if;
 							if (WB_WE = '0') then
-								WB_DataOut( 15 downto 8 ) <= QH_r;
-								WB_DataOut( 7 downto 0 ) <= QL_r;
+								WB_DataOut_r( 15 downto 8 ) <= QH_r;
+								WB_DataOut_r( 7 downto 0 ) <= QL_r;
 							end if;
 						elsif(WB_Addr = x"0200") then
 							if(WB_WE = '1') then
-								Amplitude_r <= WB_DataIn(15 downto 0);
+								Amplitude_r <= WB_DataIn;
+								Ack_r <= '1';
 							elsif(WB_WE = '0') then
-								WB_DataOut <= Amplitude_r;
+								WB_DataOut_r <= Amplitude_r;
 							end if;
 						elsif(WB_Addr = x"0202") then
 							if(WB_WE = '1') then
-								Start_Phase_r <= WB_DataIn(15 downto 0);
+								Start_Phase_r <= WB_DataIn;
+								Ack_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= Start_Phase_r;
+								WB_DataOut_r <= Start_Phase_r;
 							end if;
 						elsif(WB_Addr = x"0204") then 
 							if(WB_WE = '1') then
-								Carrier_Frequency_r (31 downto 16) <= WB_DataIn(15 downto 0);
+								Carrier_Frequency_r (31 downto 16) <= WB_DataIn;
+								Ack_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= Carrier_Frequency_r (31 downto 16);
+								WB_DataOut_r <= Carrier_Frequency_r (31 downto 16);
 							end if;
 						elsif(WB_Addr = x"0206") then 
 							if(WB_WE = '1') then
-								Carrier_Frequency_r (15 downto 0) <= WB_DataIn(15 downto 0);
+								Carrier_Frequency_r (15 downto 0) <= WB_DataIn;
+								Ack_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= Carrier_Frequency_r (15 downto 0);
+								WB_DataOut_r <= Carrier_Frequency_r (15 downto 0);
 							end if;
 						elsif(WB_Addr = x"0208") then
 							if(WB_WE = '1') then
-								Symbol_Frequency_r (31 downto 16) <= WB_DataIn(15 downto 0);
+								Symbol_Frequency_r (31 downto 16) <= WB_DataIn;
+								Ack_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= Symbol_Frequency_r (31 downto 16);
+								WB_DataOut_r <= Symbol_Frequency_r (31 downto 16);
 							end if;
 						elsif(WB_Addr = x"020A") then
 							if(WB_WE = '1') then
-								Symbol_Frequency_r (15 downto 0) <= WB_DataIn(15 downto 0);
+								Symbol_Frequency_r (15 downto 0) <= WB_DataIn;
+								Ack_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= Symbol_Frequency_r (15 downto 0);
+								WB_DataOut_r <= Symbol_Frequency_r (15 downto 0);
 							end if;
 						elsif(WB_Addr = x"020C") then
 							if(WB_WE = '1') then
-								DataPort_r <= WB_DataIn(15 downto 0);
+								DataPort_r <= WB_DataIn;
+								Ack_r <= '1';
 								wrreq_r <= '1';
 							elsif (WB_WE = '0') then
-								WB_DataOut <= DataPort_r;
+								WB_DataOut_r <= DataPort_r;
 							end if;
 						end if;
 					end if;
@@ -138,4 +147,5 @@ begin
 	DataPort_OUT <= DataPort_r;
 	wrreq <= wrreq_r;
 	WB_Ack <= Ack_r;
+	WB_DataOut <= WB_DataOut_r;
 end architecture Behavior;
