@@ -58,8 +58,10 @@ begin
 			
 				if ((WB_STB and WB_Cyc) = '1') then
 					if(Ack_r = '0') then
-						if (WB_Addr = x"020C" and full = '1')then
-							Ack_r <= '0';
+						if (WB_Addr = x"020C")then
+						   if (full = '0') then
+						     Ack_r <= '1';
+						   end if;
 						else
 							Ack_r <= '1';
 						end if;
