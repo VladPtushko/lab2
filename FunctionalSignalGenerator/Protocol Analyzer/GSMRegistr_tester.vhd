@@ -9,9 +9,10 @@ entity GSMRegistr_tester is
         WB_Sel: out std_logic_vector( 1 downto 0 );
         WB_STB : out std_logic;
         WB_WE: out std_logic;
-	WB_Cyc	: out	std_logic;
-	WB_CTI	: out	std_logic_vector(2 downto 0);
-	rdreq : out STD_LOGIC
+		WB_Cyc		: out	std_logic;
+		WB_CTI		: out	std_logic_vector(2 downto 0);
+        
+        rdreq : out STD_LOGIC
     );
 end entity GSMRegistr_tester;
 
@@ -43,14 +44,14 @@ begin
 				WB_CTI <= (others => '0');
 				nRst <= '1';
 				
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				-- Сброс
 				nRst <= '0';
-				skiptime_clk(2);
+				skiptime_clk(5);
 				nRst <= '1';
 				
-				skiptime_clk(3);
+				skiptime_clk(10);
 				
 				--for address 0x0000
 				WB_WE <= '1';
@@ -60,21 +61,21 @@ begin
 				WB_DataIn <= "0110000010011100";
 				WB_Addr <= (others => '0');
 				WB_Sel <= "11";
-				skiptime_clk(2);
+				skiptime_clk(5);
 				WB_DataIn <= "1000100000101001";
 				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "01";
-				skiptime_clk(2);
+				skiptime_clk(5);
 				WB_DataIn <= "0010100100000000";
 				WB_Cyc <= '1';
 				WB_Addr <= (others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "10";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x0200
 				WB_WE <= '1';
@@ -85,7 +86,7 @@ begin
 				WB_Addr <= (9 => '1', others => '0');
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_DataIn <= (others => '0');
 				WB_Cyc <= '1';
@@ -94,105 +95,105 @@ begin
 				WB_STB <= '1';
 				WB_Sel <= "10";
 				
-				skiptime_clk(5);
+				skiptime_clk(10);
 				--for 0x0202
 				WB_DataIn <= "0010100101000100";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 1 => '1', others => '0');
+				WB_Addr <= (9,1 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "11";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_DataIn <= "1010100101000100";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 1 => '1', others => '0');
+				WB_Addr <= (9,1 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "10";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x0204
 				WB_DataIn <= "0010100001011000";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 2 => '1', others => '0');
+				WB_Addr <= (9,2 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 2 => '1', others => '0');
+				WB_Addr <= (9,2 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x0206
 				WB_DataIn <= "0010101101011000";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 3 => '1', others => '0');
+				WB_Addr <= (9,2,1 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 3 => '1', others => '0');
+				WB_Addr <= (9,2,1 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x0208
 				WB_DataIn <= "0011101001001001";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x020A
 				WB_DataIn <= "1100101001110010";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3,1 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3,1 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
-				skiptime_clk(5);
+				skiptime_clk(10);
 				
 				--for 0x020C
 				WB_DataIn <= "0011000001010001";
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3,2 => '1', others => '0');
 				WB_WE <= '1';
 				WB_STB <= '1';
 				WB_Sel <= "01";
 				
-				skiptime_clk(2);
+				skiptime_clk(5);
 				
 				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', 4 => '1', others => '0');
+				WB_Addr <= (9,3,2 => '1', others => '0');
 				WB_WE <= '0';
 				WB_STB <= '1';
 				WB_Sel <= "11";
