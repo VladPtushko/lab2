@@ -136,7 +136,7 @@ begin
 	CarrierFrequency_OUT <= Carrier_Frequency_r;
 	SymbolFrequency_OUT <= Symbol_Frequency_r;
 	DataPort_OUT <= DataPort_r;
-	wrreq <= wrreq_dop_r;
+	wrreq <= wrreq_r;
 	WB_Ack <= Ack_r;
 	WB_DataOut <= WB_DataOut_r;
 end architecture Behavior;
