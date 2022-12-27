@@ -87,7 +87,7 @@ begin
 							end if;
 						elsif(WB_Addr = x"0202") then
 							if(WB_WE = '1') then
-								Start_Phase_r <= WB_DataI
+								Start_Phase_r <= WB_DataIn;
 							elsif (WB_WE = '0') then
 								WB_DataOut_r <= Start_Phase_r;
 							end if;
