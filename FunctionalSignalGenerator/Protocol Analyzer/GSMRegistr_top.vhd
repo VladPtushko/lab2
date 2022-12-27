@@ -45,10 +45,36 @@ architecture rtl of GSMRegistr_top is
       );
     end component;
     
+	component GSMRegister
+		port(
+		clk	: in	std_logic;
+		nRst	: in	std_logic;
+		
+		--Wishbone
+		WB_Addr		: in	std_logic_vector( 15 downto 0 );
+		WB_DataOut	: out	std_logic_vector( 15 downto 0 );
+		WB_DataIn	: in	std_logic_vector( 15 downto 0 );
+		WB_WE			: in 	std_logic;
+		WB_Sel		: in 	std_logic_vector( 1 downto 0 );
+		WB_STB		: in 	std_logic;
+		WB_Cyc		: in	std_logic;
+		WB_Ack		: out std_logic;
+		WB_CTI		: in	std_logic_vector(2 downto 0);
+
+		PRT_O						: out 	std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
+		Amplitude_OUT			: out 	std_logic_vector( 15 downto 0);
+		StartPhase_OUT			: out 	std_logic_vector( 15 downto 0);
+		CarrierFrequency_OUT	: out 	std_logic_vector(31 downto 0);
+		SymbolFrequency_OUT	: out 	std_logic_vector( 31 downto 0);
+		DataPort_OUT			: out 	std_logic_vector( 15 downto 0);--идет в FIFO
+		wrreq						: out 	std_logic;
+		full : in std_logic
+	);
+	
     signal wrreq : std_logic;
     signal DataPort_r: std_logic_vector( 15 downto 0 );
 begin
-    GSMRegister_inst : entity work.GSMRegister
+    GSMRegister_inst : GSMRegister
     port map (
         clk => clk,
         nRst => nRst,
@@ -67,7 +93,8 @@ begin
         CarrierFrequency_OUT => CarrierFrequency_OUT,
         SymbolFrequency_OUT => SymbolFrequency_OUT,
         DataPort_OUT => DataPort_r,
-        wrreq => wrreq
+        wrreq => wrreq,
+		full => full
     );
 
 
