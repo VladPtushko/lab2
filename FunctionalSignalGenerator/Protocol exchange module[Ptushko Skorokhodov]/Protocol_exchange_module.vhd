@@ -379,8 +379,8 @@ begin
             WB_STB <= '0';
             ------------------------------------------------
           elsif (WB_ready_r = B"01") then
-            WB_STB <= '0';
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
+              WB_STB <= '0';
               if (usedw_input_fi > 0) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then
@@ -496,8 +496,8 @@ begin
             WB_STB <= '0';
             ------------------------------------------------
           elsif (WB_ready_r = B"01") then
-            WB_STB <= '0';
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
+              WB_STB <= '0';
               if (usedw_input_fi > 0) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then
@@ -615,8 +615,8 @@ begin
             WB_STB <= '0';
             ------------------------------------------------
           elsif (WB_ready_r = B"01") then
-            WB_STB <= '0';
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
+              WB_STB <= '0';
               if (usedw_input_fi > 0) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then

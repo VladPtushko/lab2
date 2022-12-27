@@ -3,56 +3,59 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_signed.all;
 
-entity moving_average_tb is
-end entity moving_average_tb;
+entity ma_tb is
+end entity ma_tb;
 
-architecture sim of moving_average_tb is
-	signal i_clk		: std_logic;
-	signal i_nRst		: std_logic;
-	signal i_data		: std_logic_vector(10-1 downto 0);
-	signal MANumber	: std_logic_vector(32-1 downto 0);
-	signal FilterCoeff: std_logic_vector(16-1 downto 0);
-	signal o_data		: std_logic_vector(10-1 downto 0);
+architecture sim of ma_tb is
+	signal i_clk_r			: std_logic;
+	signal i_nRst_r		: std_logic;
+	signal IData_In_r		: std_logic_vector(10-1 downto 0);
+	signal QData_In_r		: std_logic_vector(10-1 downto 0);
+	signal MANumber_r		: std_logic_vector(5-1 downto 0);
+	signal IData_Out_r		: std_logic_vector(10-1 downto 0);
+	signal QData_out_r		: std_logic_vector(10-1 downto 0);
 	
 	component MA is
 		port (
 			i_clk			: in	std_logic;
 			i_nRst		: in	std_logic;
-			i_data		: in	std_logic_vector(10-1 downto 0);
-			MANumber		: in	std_logic_vector(32-1 downto 0);
-			FilterCoeff	: in	std_logic_vector(16-1 downto 0);
-			o_data		: out	std_logic_vector(10-1 downto 0)
+			IData_In		: in	std_logic_vector(10-1 downto 0);
+			QData_In		: in	std_logic_vector(10-1 downto 0);
+			MANumber		: in	std_logic_vector(5-1 downto 0);
+			IData_Out		: out	std_logic_vector(10-1 downto 0);
+			QData_out		: out	std_logic_vector(10-1 downto 0)
 		);
 	end component;
 	
-	component moving_average_tester is
+	component ma_tester is
 		port (
 			i_clk			: out	std_logic;
 			i_nRst		: out	std_logic;
-			i_data		: out	std_logic_vector(10-1 downto 0);
-			MANumber		: out std_logic_vector(32-1 downto 0);
-			FilterCoeff	: out	std_logic_vector(16-1 downto 0)
+			IData_In		: out	std_logic_vector(10-1 downto 0);
+			QData_In		: out	std_logic_vector(10-1 downto 0);
+			MANumber		: out std_logic_vector(5-1 downto 0)
 		);
 	end component;
 	
 begin
-	moving_average_i : entity work.MA
+	ma_i : entity work.MA
 	port map (
-		i_clk			=> i_clk,
-		i_nRst		=> i_nRst,		
-		i_data		=> i_data,
-		MANumber		=> MANumber,
-		FilterCoeff	=> FilterCoeff,
-		o_data		=> o_data
+		i_clk			=> i_clk_r,
+		i_nRst		=> i_nRst_r,		
+		IData_In		=> IData_In_r,		
+		QData_In		=> QData_In_r,
+		MANumber		=> MANumber_r,
+		IData_Out		=> IData_Out_r,
+		QData_out		=> QData_out_r
 	);
 	
-	moving_average_tester_i : entity work.moving_average_tester 
+	ma_tester_i : entity work.ma_tester 
 	port map (
-		i_clk			=> i_clk,
-		i_nRst		=> i_nRst,		
-		i_data		=> i_data,
-		MANumber		=> MANumber,
-		FilterCoeff	=> FilterCoeff
+		i_clk			=> i_clk_r,
+		i_nRst		=> i_nRst_r,		
+		IData_In		=> IData_In_r,	
+		QData_In		=> QData_In_r,
+		MANumber		=> MANumber_r
 	);
 	
 end architecture;

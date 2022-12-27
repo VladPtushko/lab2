@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 --use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
-entity tester_Protocol_exchange_module is
+entity tester2_Protocol_exchange_module is
 Port
 	(
 Clk, nRst:  out std_logic;
@@ -34,15 +34,15 @@ Clk, nRst:  out std_logic;
 	);
 end entity;
 
-architecture rlt of tester_Protocol_exchange_module is
+architecture rlt of tester2_Protocol_exchange_module is
 	
 	signal rst: std_logic := '1';
 	
 
 	
 	--FIFO
-	signal sig_q_input: std_logic_vector (15 downto 0):="0000000000000001";
-	signal read_fb0: std_logic_vector(15 downto 0) := "0000000110000001";
+	signal sig_q_input: std_logic_vector (15 downto 0):="0000000100000000";
+	signal read_fb0: std_logic_vector(15 downto 0) := "0000000110000110";
 	signal addr_cor: std_logic_vector(15 downto 0) := "0000000000000000";
 	signal addr_incor: std_logic_vector(15 downto 0) := "1111111111111111";
 	signal sig_usedw_output_5:std_logic_vector (10 downto 0):="00000000101";
@@ -87,38 +87,29 @@ architecture rlt of tester_Protocol_exchange_module is
 			usedw_input_fi <= sig_usedw_output_3;
 			skiptime(3);
 			q_input <= read_fb0;
-			usedw_input_fi <= sig_usedw_output_2;
 			skiptime(1);
 			q_input <= addr_incor;
-			usedw_input_fi <= sig_usedw_output_1;
 			skiptime(1);
 			q_input <= sig_q_input;
-			usedw_input_fi <= sig_usedw_output_zero;
-			skiptime(6);
-			usedw_input_fo <= sig_usedw_output_1;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_2;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_3;
+			skiptime(5);
+			q_input <= addr_incor;
 			skiptime(2);
 			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_1;
 			skiptime(1);
 			WB_Ack <= not ack;
 			skiptime(1);
+			q_input <= addr_cor;
+			skiptime(2);
 			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_2;
-			usedw_input_fo <= sig_usedw_output_4;
 			skiptime(1);
 			WB_Ack <= not ack;
 			skiptime(1);
+			q_input <= addr_incor;
+			skiptime(2);
 			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_1;
-			usedw_input_fo <= sig_usedw_output_5;
 			skiptime(1);
 			WB_Ack <= not ack;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_zero;
+			skiptime(2);
 			skiptime(100);
  			wait;
 		end process;

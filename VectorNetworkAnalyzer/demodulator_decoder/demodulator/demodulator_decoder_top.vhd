@@ -46,11 +46,7 @@ architecture a_demodulator_decoder_top of demodulator_decoder_top is
             useful_information : in std_logic_vector(3 downto 0); --от Юры
             reset : in std_logic; --Active high reset
             clk : in std_logic;   --Clock to register output and disparity
-            -- ena : in std_logic;              -- Enable registers for output and disparity
-            -- ko : out std_logic ;             -- Active high K indication
             dataout : out std_logic_vector(7 downto 0) --Decoded output
-            -- code_err : out std_logic;                   --Indication for illegal character
-            -- disp_err : out std_logic                    --Indication for disparity error
         ); 
     end component; 
 
@@ -81,12 +77,9 @@ begin
         port map(
             clk  => clk,
             reset => nRst,
-            -- ko =>
             dataout =>dataout,
-            --code_err =>
-            -- disp_err =>
-	        modulation_mode => modulation_mode,
-	        useful_information => useful_information
+	    modulation_mode => modulation_mode,
+	    useful_information => useful_information
         );
         
     division_lut_inst: division_lut
