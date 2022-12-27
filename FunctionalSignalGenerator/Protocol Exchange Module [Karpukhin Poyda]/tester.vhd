@@ -19,83 +19,83 @@ Port
 end entity;
 
 architecture test_arch of tester is
-	signal empty_16_bits: std_logic_vector(15 downto 0) := "0000000000000000";
-	signal package_1: std_logic_vector(15 downto 0) := "1111000011110000";
-	signal package_2: std_logic_vector(15 downto 0) := "0000111100001111";
-	signal package_3: std_logic_vector(15 downto 0) := "0011001100110011";
-	signal package_4: std_logic_vector(15 downto 0) := "1100110011001100";
-	signal package_5: std_logic_vector(15 downto 0) := "0001111000011110";
+	signal empty_16_bits_r: std_logic_vector(15 downto 0) := "0000000000000000";
+	signal package_1_r: std_logic_vector(15 downto 0) := "1111000011110000";
+	signal package_2_r: std_logic_vector(15 downto 0) := "0000111100001111";
+	signal package_3_r: std_logic_vector(15 downto 0) := "0011001100110011";
+	signal package_4_r: std_logic_vector(15 downto 0) := "1100110011001100";
+	signal package_5_r: std_logic_vector(15 downto 0) := "0001111000011110";
 	
-	signal sig_clk: std_logic := '1';
-	signal fsdo: std_logic := '1';
-	signal rst: std_logic := '0';
-	signal fscts: std_logic := '1';
+	signal sig_clk_r: std_logic := '1';
+	signal fsdo_r: std_logic := '1';
+	signal rst_r: std_logic := '0';
+	signal fscts_r: std_logic := '1';
 	
-	signal sig_data_input: STD_LOGIC_VECTOR (15 DOWNTO 0) := "0000000000000000";
-	signal sig_wrreq_input: STD_LOGIC := '0';
+	signal sig_data_input_r: STD_LOGIC_VECTOR (15 DOWNTO 0) := "0000000000000000";
+	signal sig_wrreq_input_r: STD_LOGIC := '0';
 	
 
-	constant clockFrequencyHz : integer := 500;
-	constant clockPeriod: time := 1000 ms / clockFrequencyHz;
+	constant clockFrequencyHz_r : integer := 500;
+	constant clockPeriod_r: time := 1000 ms / clockFrequencyHz_r;
 	
 	 
 begin
 
 	
-	clk <= sig_clk;
-	sig_clk <= not sig_clk after clockPeriod / 2;
+	clk <= sig_clk_r;
+	sig_clk_r <= not sig_clk_r after clockPeriod_r / 2;
 	
-	FT2232H_FSDO <= fsdo;
-	FT2232H_FSCTS <= fscts;
-	nRst <= not rst;	
+	FT2232H_FSDO <= fsdo_r;
+	FT2232H_FSCTS <= fscts_r;
+	nRst <= not rst_r;	
 	
-	data_input <= sig_data_input;
-	wrreq_input <= sig_wrreq_input;
+	data_input <= sig_data_input_r;
+	wrreq_input <= sig_wrreq_input_r;
 	
 	process is
-		procedure send_to_serial(signal pack: in  std_logic_vector(15 downto 0);
-											signal serial: out std_logic) is
+		procedure send_to_serial(signal pack_r: in  std_logic_vector(15 downto 0);
+											signal serial_r: out std_logic) is
 		begin
-			serial <= '0';
-			wait for clockPeriod;
+			serial_r <= '0';
+			wait for clockPeriod_r;
 			
 			for i in 0 to 15 loop
-				serial <= pack(i);
-				wait for clockPeriod;
+				serial_r <= pack_r(i);
+				wait for clockPeriod_r;
 			end loop;
 			
-			serial <= '0';
-			wait for clockPeriod;
-			serial <= '1';
-			wait for clockPeriod;
+			serial_r <= '0';
+			wait for clockPeriod_r;
+			serial_r <= '1';
+			wait for clockPeriod_r;
 		end procedure;
 		
-		procedure send_to_deserialized(signal pack: in  std_logic_vector(15 downto 0)) is
+		procedure send_to_deserialized(signal pack_r: in  std_logic_vector(15 downto 0)) is
 		begin
-			sig_wrreq_input <= '1';
-			sig_data_input <= pack;
+			sig_wrreq_input_r <= '1';
+			sig_data_input_r <= pack_r;
 			
-			wait for clockPeriod;
-			sig_wrreq_input <= '0';
+			wait for clockPeriod_r;
+			sig_wrreq_input_r <= '0';
 		end procedure;
 	begin
 		rdreq_output <= '0';
 		
-		send_to_serial(package_1, fsdo);
-		send_to_serial(package_3, fsdo);
+		send_to_serial(package_1_r, fsdo_r);
+		send_to_serial(package_3_r, fsdo_r);
 		rdreq_output <= '1';
 		
-		wait for 2 * clockPeriod;
+		wait for 2 * clockPeriod_r;
 		rdreq_output <= '0';
 		
 		wait for 50 ms;
 		
-		fscts <= '1';
+		fscts_r <= '1';
 		
-		send_to_deserialized(package_2);
-		fscts <= '0';
+		send_to_deserialized(package_2_r);
+		fscts_r <= '0';
 		
-		send_to_deserialized(package_5);
+		send_to_deserialized(package_5_r);
 		
 		wait for 1000 ms;
 	end process;

@@ -16,18 +16,18 @@ entity Serializer is
 end entity;
 
 architecture Serializer_arch of Serializer is
-	signal fsdi: std_logic := '1';
+	signal fsdi_r: std_logic := '1';
 	
-	signal empty_16_bits: std_logic_vector(15 downto 0) := "0000000000000000";
-	
-	signal rdreq_input: std_logic := '0';
-	signal q_input: std_logic_vector(15 DOWNTO 0) := "0000000000000000";
-	signal q_input_ind: integer range 0 to 16 := 0;
-	signal reading_input: std_logic := '0';
+	signal rdreq_input_r: std_logic := '0';
+	signal q_input_r: std_logic_vector(15 DOWNTO 0) := "0000000000000000";
 	signal usedw_count: std_logic_vector(10 downto 0) := "00000000000";
 	
-	signal prev_usedw_count: STD_LOGIC_VECTOR (10 DOWNTO 0) := "00000000000";
-
+	signal input_number_count: integer range -1 to 18 := -1;
+	-- -1 = NOT READING
+	-- 0 = READING FROM FIFO TO q_input
+	-- 1 = FIRST BIT
+	-- 2-17 = BITS[15:0]
+	-- 18 = LAST BIT
 	
 	component fifo is 
 		port (
@@ -41,7 +41,7 @@ architecture Serializer_arch of Serializer is
 	end component;
 
 begin
-	FT2232H_FSDI <= fsdi;
+	FT2232H_FSDI <= fsdi_r;
 	usedw_input_count <= usedw_count;
 	
 	input_fifo: fifo port map (
@@ -49,8 +49,8 @@ begin
 			data => data_input,
 			
 			wrreq => wrreq_input,
-			rdreq => rdreq_input,
-			q => q_input,
+			rdreq => rdreq_input_r,
+			q => q_input_r,
 			usedw => usedw_count
 	);
 	
@@ -58,36 +58,47 @@ begin
 	begin
 	
 		if rising_edge(clk) then
-			if reading_input = '0' and rdreq_input = '0' and to_integer(unsigned(usedw_count)) > 0 then
-				rdreq_input <= '1';
-				reading_input <= '1';
-				fsdi <= '1';
-			
-			elsif reading_input = '1' and rdreq_input = '1' and to_integer(unsigned(prev_usedw_count)) > 0 then
-				rdreq_input <= '0';
-				reading_input <= '1';
-				q_input_ind <= 0;
-				
-				fsdi <= '0';
-				
-			elsif reading_input = '1' and FT2232H_FSCTS = '1' and q_input_ind = 0 then
-				fsdi <= q_input(q_input_ind);
-				q_input_ind <= q_input_ind + 1;
-			
-			elsif reading_input = '1' and FT2232H_FSCTS = '0' and q_input_ind <= 15 then
-				fsdi <= q_input(q_input_ind);
-				q_input_ind <= q_input_ind + 1;
-			
-			elsif reading_input = '1' and q_input_ind = 16 then
-				fsdi <= '0';
-				reading_input <= '0';
-				q_input_ind <= 0;
-					
-			elsif reading_input = '0' then
-				fsdi <= '1';
+		
+			-- OPENING FOR READING
+			if input_number_count = 0 then
+				rdreq_input_r <= '1';
+			else
+				rdreq_input_r <= '0';
 			end if;
---			
-			prev_usedw_count <= usedw_count;
+			
+			-- FSDI
+			if input_number_count /= -1 then
+			
+				if input_number_count = 0 then
+					fsdi_r <= '1';
+				elsif input_number_count = 1 then
+					fsdi_r <= '0';
+				elsif input_number_count < 18 then
+					fsdi_r <= q_input_r(input_number_count - 2);
+					
+				elsif input_number_count = 18 then
+					fsdi_r <= '0';
+				else
+					fsdi_r <= '1';
+				end if;
+			
+			else
+				fsdi_r <= '1';
+
+			end if;
+			
+			-- INCREMENT COUNTER
+			if input_number_count = 18 then
+				input_number_count <= -1;
+			elsif input_number_count /= -1 then
+				input_number_count <= input_number_count + 1;
+			end if;
+			
+			
+			-- DETECTING COUNT INCREASING WHEN NOT READING
+			if  to_integer(unsigned(usedw_count)) > 0 and input_number_count = -1 then
+				input_number_count <= 0;
+			end if;
 			
 		end if;
 	

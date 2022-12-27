@@ -20,8 +20,7 @@ entity ProtocolExchangeModule is
 end entity;
 
 architecture ProtocolExchangeModule_arch of ProtocolExchangeModule is
-	signal my_clk: std_logic := '0';
-	signal rst: std_logic := '0';
+	signal rst_r: std_logic := '0';
 	
 	component Serializer is 
 		port (
@@ -48,12 +47,12 @@ architecture ProtocolExchangeModule_arch of ProtocolExchangeModule is
 
 begin
 	FT2232H_FSCLK <= clk;
-	rst <= not nRst;
+	rst_r <= not nRst;
 	
 	--- output
 	ser: Serializer port map ( 
 			Clk => clk, 
-			rst => rst,
+			rst => rst_r,
 			FT2232H_FSCTS => FT2232H_FSCTS,
 			FT2232H_FSDI => FT2232H_FSDI,
 			
@@ -65,7 +64,7 @@ begin
 	--- input
 	des: Deserializer port map (
 			Clk => clk, 
-			rst => rst,
+			rst => rst_r,
 			FT2232H_FSDO => FT2232H_FSDO,
 			
 			rdreq_output => rdreq_output,
