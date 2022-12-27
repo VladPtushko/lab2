@@ -39,21 +39,7 @@ architecture Behavior of GSMRegister is
 	signal DataPort_r: std_logic_vector( 15 downto 0 ); -- пойдет в ФИФО
 	signal Ack_r: std_logic;
 	signal wrreq_r: std_logic;
-	signal wrreq_dop_r: std_logic; 
 begin
-		
-		process(clk,nRst)
-		begin
-			if (nRst = '0') then
-				wrreq_dop_r <= '0';
-			elsif (rising_edge(clk)) then
-				if (wrreq_dop_r = '1') then
-					wrreq_dop_r <= '0';
-				else
-					wrreq_dop_r <= wrreq_r;
-				end if;
-			end if;
-		end process;
 		
 		process(clk,nRst, WB_STB, WB_WE, WB_Cyc)
 		begin
