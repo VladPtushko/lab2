@@ -2,6 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 --use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+
+use std.env.stop;
+
 entity tester_Protocol_exchange_module is
 Port
 	(
@@ -37,20 +40,39 @@ end entity;
 architecture rlt of tester_Protocol_exchange_module is
 	
 	signal rst: std_logic := '1';
+	signal fb: std_logic := '1';
+	signal rFb: std_logic := '0';
 	
 
 	
 	--FIFO
-	signal sig_q_input: std_logic_vector (15 downto 0):="0000000000000001";
-	signal read_fb0: std_logic_vector(15 downto 0) := "0000000110000001";
+		
+	signal read_fb1: std_logic_vector(15 downto 0) := "0000000110000001";
+	signal read_fb2: std_logic_vector(15 downto 0) := "0000000101000010";
+	signal read_fb3: std_logic_vector(15 downto 0) := "0000000110001011";
+	signal read_fb4: std_logic_vector(15 downto 0) := "0000000110001100";
+	signal read_fb5: std_logic_vector(15 downto 0) := "0000000110000101";
+	signal read_fb6: std_logic_vector(15 downto 0) := "0000000110000110";
+	signal read_fb7: std_logic_vector(15 downto 0) := "0000000101000001";
+	
+	signal read_addr1: std_logic_vector (15 downto 0):="0000000000000000";
+	signal read_addr2: std_logic_vector (15 downto 0):="0000000100000000";
+	signal read_addr3: std_logic_vector (15 downto 0):="0000001000000000";
+	signal read_addr4: std_logic_vector (15 downto 0):="0000001100000000";
+	signal read_addr5: std_logic_vector (15 downto 0):="0000000000000000";
+	signal read_addr6: std_logic_vector (15 downto 0):="0000000000000000";
+	signal read_addr7: std_logic_vector (15 downto 0):="1111111111111111";
+	
 	signal addr_cor: std_logic_vector(15 downto 0) := "0000000000000000";
 	signal addr_incor: std_logic_vector(15 downto 0) := "1111111111111111";
+	
+	signal sig_usedw_output_6:std_logic_vector (10 downto 0):="00000000110";
 	signal sig_usedw_output_5:std_logic_vector (10 downto 0):="00000000101";
 	signal sig_usedw_output_4:std_logic_vector (10 downto 0):="00000000100";
 	signal sig_usedw_output_3:std_logic_vector (10 downto 0):="00000000011";
-	signal sig_usedw_output_zero:std_logic_vector (10 downto 0):="00000000000";
 	signal sig_usedw_output_2:std_logic_vector (10 downto 0):="00000000010";
 	signal sig_usedw_output_1:std_logic_vector (10 downto 0):="00000000001";
+	signal sig_usedw_output_zero:std_logic_vector (10 downto 0):="00000000000";
 	
 	--WISHBONE
 	signal ack: std_logic := '1';
@@ -75,52 +97,133 @@ architecture rlt of tester_Protocol_exchange_module is
 		
 		
 		process is
+				procedure q_in(signal command: in  std_logic_vector(15 downto 0);signal address: in  std_logic_vector(15 downto 0)) is
+					begin
+						q_input <= addr_cor;
+						usedw_input_fi <= sig_usedw_output_zero;
+						usedw_input_fo <= sig_usedw_output_zero;
+						nRst <= not rst;
+						WB_Ack <= not ack;
+						skiptime(1);
+						nRst <=  rst;
+						usedw_input_fi <= sig_usedw_output_3;
+						skiptime(3);
+						q_input <= command;
+						usedw_input_fi <= sig_usedw_output_2;
+						skiptime(1);
+						q_input <= addr_incor;
+						usedw_input_fi <= sig_usedw_output_1;
+						skiptime(1);
+						q_input <= address;
+						usedw_input_fi <= sig_usedw_output_zero;
+				end procedure;
+				procedure command_read(signal command: in  std_logic_vector(15 downto 0);signal address: in  std_logic_vector(15 downto 0);signal FB: in std_logic) is
+					begin
+						q_in(command,address);
+						usedw_input_fi <= sig_usedw_output_zero;
+						skiptime(6);
+						usedw_input_fo <= sig_usedw_output_1;
+						skiptime(1);
+						usedw_input_fo <= sig_usedw_output_2;
+						skiptime(1);
+						usedw_input_fo <= sig_usedw_output_3;
+						if(FB = '1') then
+							skiptime(3);
+							usedw_input_fo <= sig_usedw_output_4;
+							skiptime(1);
+							usedw_input_fo <= sig_usedw_output_5;
+							skiptime(1);
+							usedw_input_fo <= sig_usedw_output_6;
+							skiptime(3);
+						else
+							skiptime(2);
+						end if;
+						WB_Ack <= ack;
+						WB_DataIn_0 <= package_data_1;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(1);
+						WB_Ack <= ack;
+						WB_DataIn_0 <= package_data_2;
+						usedw_input_fo <= sig_usedw_output_4;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(1);
+						WB_Ack <= ack;
+						WB_DataIn_0 <= package_data_1;
+						usedw_input_fo <= sig_usedw_output_5;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(1);
+						usedw_input_fo <= sig_usedw_output_zero;
+						skiptime(5);
+				end procedure;
+				procedure command_write(signal command: in  std_logic_vector(15 downto 0);signal address: in  std_logic_vector(15 downto 0);signal FB: in std_logic) is
+					begin
+						q_in(command,address);
+						usedw_input_fi <= sig_usedw_output_3;
+						if(FB = '1') then
+							skiptime(6);
+							usedw_input_fo <= sig_usedw_output_1;
+							skiptime(1);
+							usedw_input_fo <= sig_usedw_output_2;
+							skiptime(1);
+							usedw_input_fo <= sig_usedw_output_3;
+							skiptime(2);
+						else
+							skiptime(5);
+						end if;
+						q_input <= addr_incor;
+						skiptime(2);
+						WB_Ack <= ack;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(1);
+						q_input <= addr_cor;
+						skiptime(2);
+						WB_Ack <= ack;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(1);
+						q_input <= addr_incor;
+						skiptime(2);
+						WB_Ack <= ack;
+						skiptime(1);
+						WB_Ack <= not ack;
+						skiptime(2);
+						usedw_input_fo <= sig_usedw_output_zero;
+						skiptime(5);
+				end procedure;
+				procedure addres_error(signal command: in  std_logic_vector(15 downto 0);signal address: in  std_logic_vector(15 downto 0)) is
+					begin
+						q_in(command,address);
+						skiptime(6);
+						usedw_input_fo <= sig_usedw_output_1;
+						skiptime(1);
+						usedw_input_fo <= sig_usedw_output_2;
+						skiptime(1);
+						usedw_input_fo <= sig_usedw_output_3;
+						skiptime(8);
+						usedw_input_fo <= sig_usedw_output_zero;
+						skiptime(5);
+				end procedure;
+				
 				
 			begin
-			q_input <= addr_cor;
-			usedw_input_fi <= sig_usedw_output_zero;
-			usedw_input_fo <= sig_usedw_output_zero;
-			nRst <= not rst;
-			WB_Ack <= not ack;
-			skiptime(1);
-			nRst <=  rst;
-			usedw_input_fi <= sig_usedw_output_3;
-			skiptime(3);
-			q_input <= read_fb0;
-			usedw_input_fi <= sig_usedw_output_2;
-			skiptime(1);
-			q_input <= addr_incor;
-			usedw_input_fi <= sig_usedw_output_1;
-			skiptime(1);
-			q_input <= sig_q_input;
-			usedw_input_fi <= sig_usedw_output_zero;
-			skiptime(6);
-			usedw_input_fo <= sig_usedw_output_1;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_2;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_3;
-			skiptime(2);
-			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_1;
-			skiptime(1);
-			WB_Ack <= not ack;
-			skiptime(1);
-			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_2;
-			usedw_input_fo <= sig_usedw_output_4;
-			skiptime(1);
-			WB_Ack <= not ack;
-			skiptime(1);
-			WB_Ack <= ack;
-			WB_DataIn_0 <= package_data_1;
-			usedw_input_fo <= sig_usedw_output_5;
-			skiptime(1);
-			WB_Ack <= not ack;
-			skiptime(1);
-			usedw_input_fo <= sig_usedw_output_zero;
-			skiptime(100);
- 			wait;
+			rFb <= not fb;
+			command_read(read_fb1,read_addr1, rFb); --?????? ???????????????? ?????? 0 cyc
+			command_write(read_fb2,read_addr2, rFb); --?????? ???????????????? ?????? 1 cyc
+			
+			rFb <= fb;
+			command_read(read_fb3,read_addr3, rFb);--?????? ?????? ?? ????? ?????/?????? (FIFO)  c FB 0 cyc
+			command_write(read_fb4,read_addr4, rFb);--?????? ?????? ? ???? ?????/?????? (FIFO) c FB 2 cyc
+			
+			rFb <= not fb;
+			command_read(read_fb5,read_addr5, rFb);--?????? ?????? ?? ?????? 0 cyc
+			command_write(read_fb6,read_addr6, rFb);--?????? ?????? ? ?????? 0 cyc
+			
+			addres_error(read_fb7,read_addr7); -- ??????????? ????? 
+			stop;
 		end process;
 	end architecture;
 	

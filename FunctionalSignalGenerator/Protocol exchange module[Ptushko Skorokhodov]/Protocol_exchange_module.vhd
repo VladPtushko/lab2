@@ -106,8 +106,10 @@ begin
               current_state <= header_transfer;
             elsif (AddrValid_r = B"000") then
               current_state <= data_transfer;
-            else
+            elsif (Cmd_r = B"001" or Cmd_r = B"011" or Cmd_r = B"101") then
               current_state <= error_handling;
+            else
+              current_state <= state_wait;
             end if;
           end if;
 

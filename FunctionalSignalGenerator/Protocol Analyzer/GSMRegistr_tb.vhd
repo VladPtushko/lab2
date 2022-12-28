@@ -20,8 +20,8 @@ architecture bench of GSMRegistr_top_tb is
       WB_Cyc: in std_logic;
       WB_CTI: in std_logic_vector(2 downto 0);
       PRT_O : out std_logic_vector( 15 downto 0 );
-      Amplitude_OUT : out std_logic_vector( 15 downto 0);
-      StartPhase_OUT : out std_logic_vector( 15 downto 0);
+--      Amplitude_OUT : out std_logic_vector( 15 downto 0);
+--      StartPhase_OUT : out std_logic_vector( 15 downto 0);
       CarrierFrequency_OUT : out std_logic_vector(31 downto 0);
       SymbolFrequency_OUT : out std_logic_vector( 31 downto 0);
       rdreq : in STD_LOGIC;
@@ -41,7 +41,7 @@ architecture bench of GSMRegistr_top_tb is
         WB_Sel: out std_logic_vector( 1 downto 0 );
         WB_STB : out std_logic;
         WB_WE : out std_logic;
-	WB_Cyc: out std_logic;
+		WB_Cyc: out std_logic;
         rdreq : out STD_LOGIC
     );
     end component;
@@ -64,8 +64,8 @@ architecture bench of GSMRegistr_top_tb is
   signal WB_WE : std_logic;
   signal WB_Cyc : STD_LOGIC;
   signal PRT_O : std_logic_vector( 15 downto 0 );
-  signal Amplitude_OUT : std_logic_vector( 15 downto 0);
-  signal StartPhase_OUT : std_logic_vector( 15 downto 0);
+--  signal Amplitude_OUT : std_logic_vector( 15 downto 0);
+--  signal StartPhase_OUT : std_logic_vector( 15 downto 0);
   signal CarrierFrequency_OUT : std_logic_vector(31 downto 0);
   signal SymbolFrequency_OUT : std_logic_vector( 31 downto 0);
   signal rdreq : STD_LOGIC;
@@ -91,8 +91,8 @@ begin
       WB_Cyc => WB_Cyc,
       WB_CTI => WB_CTI,
       PRT_O => PRT_O,
-      Amplitude_OUT => Amplitude_OUT,
-      StartPhase_OUT => StartPhase_OUT,
+--      Amplitude_OUT => Amplitude_OUT,
+--      StartPhase_OUT => StartPhase_OUT,
       CarrierFrequency_OUT => CarrierFrequency_OUT,
       SymbolFrequency_OUT => SymbolFrequency_OUT,
       rdreq => rdreq,
@@ -111,7 +111,7 @@ begin
         WB_Sel=> WB_Sel,
         WB_STB => WB_STB,
         WB_WE => WB_WE,
-	WB_Cyc => WB_Cyc,
+		WB_Cyc => WB_Cyc,
         rdreq => rdreq
     );
 
