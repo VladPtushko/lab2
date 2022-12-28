@@ -53,10 +53,10 @@ begin
 			usedw => usedw_count
 	);
 	
-	process(clk)
+	process(clk, FT2232H_FSCTS)
 	begin
 	
-		if rising_edge(clk, FT2232H_FSCTS) then
+		if rising_edge(clk) then
 		
 			-- OPENING FOR READING
 			if CONV_INTEGER(unsigned(usedw_count)) > 0 and input_number_count = -1 then
@@ -85,7 +85,7 @@ begin
 			-- INCREMENT COUNTER
 			if input_number_count = 17 then
 				input_number_count <= -1;
-			elsif input_number_count /= -1 and (FT2232H_FSCTS = '0' or falling_edge(FT2232H_FSCTS)) then
+			elsif input_number_count /= -1 and FT2232H_FSCTS = '0' then
 				input_number_count <= input_number_count + 1;
 			end if;
 			
