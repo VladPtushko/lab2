@@ -52,6 +52,17 @@ begin
 				nRst <= '1';
 				
 				skiptime_clk(10);
+				--for address 0x020C
+				WB_DataIn <= "0011000001010001";
+				WB_Cyc <= '1';
+				WB_Addr <= (9 => '1',3 => '1',2 => '1', others => '0');
+				WB_WE <= '1';
+				WB_STB <= '1';
+				WB_Sel <= "01";
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				WB_STB <= '0';
+				skiptime_clk(30);
 				
 				--for address 0x0000
 				WB_WE <= '1';
@@ -86,54 +97,54 @@ begin
 				WB_STB <= '0';
 				skiptime_clk(10);
 				
-				--for 0x0200
-				WB_WE <= '1';
-				WB_STB <= '1';
-				WB_CTI <= "001";
-				WB_Cyc <= '1';
-				WB_DataIn <= "0010100101011100";
-				WB_Addr <= (9 => '1', others => '0');
-				WB_Sel <= "01";
-				wait until rising_edge(clk_r);
-				wait for 200 fs;
-				WB_STB <= '0';
-				
-				skiptime_clk(5);
-				
-				WB_DataIn <= (others => '0');
-				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1', others => '0');
-				WB_WE <= '0';
-				WB_STB <= '1';
-				WB_Sel <= "10";
-				wait until rising_edge(clk_r);
-				wait for 200 fs;
-				WB_STB <= '0';
-				
-				skiptime_clk(10);
-				--for 0x0202
-				WB_DataIn <= "0010100101000100";
-				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1',1 => '1', others => '0');
-				WB_WE <= '1';
-				WB_STB <= '1';
-				WB_Sel <= "11";
-				wait until rising_edge(clk_r);
-				wait for 200 fs;
-				WB_STB <= '0';
-				
-				skiptime_clk(5);
-				
-				WB_DataIn <= "1010100101000100";
-				WB_Cyc <= '1';
-				WB_Addr <= (9 => '1',1 => '1', others => '0');
-				WB_WE <= '0';
-				WB_STB <= '1';
-				WB_Sel <= "10";
-				wait until rising_edge(clk_r);
-				wait for 200 fs;
-				WB_STB <= '0';
-				skiptime_clk(10);
+--				--for 0x0200
+--				WB_WE <= '1';
+--				WB_STB <= '1';
+--				WB_CTI <= "001";
+--				WB_Cyc <= '1';
+--				WB_DataIn <= "0010100101011100";
+--				WB_Addr <= (9 => '1', others => '0');
+--				WB_Sel <= "01";
+--				wait until rising_edge(clk_r);
+--				wait for 200 fs;
+--				WB_STB <= '0';
+--				
+--				skiptime_clk(5);
+--				
+--				WB_DataIn <= (others => '0');
+--				WB_Cyc <= '1';
+--				WB_Addr <= (9 => '1', others => '0');
+--				WB_WE <= '0';
+--				WB_STB <= '1';
+--				WB_Sel <= "10";
+--				wait until rising_edge(clk_r);
+--				wait for 200 fs;
+--				WB_STB <= '0';
+--				
+--				skiptime_clk(10);
+--				--for 0x0202
+--				WB_DataIn <= "0010100101000100";
+--				WB_Cyc <= '1';
+--				WB_Addr <= (9 => '1',1 => '1', others => '0');
+--				WB_WE <= '1';
+--				WB_STB <= '1';
+--				WB_Sel <= "11";
+--				wait until rising_edge(clk_r);
+--				wait for 200 fs;
+--				WB_STB <= '0';
+--				
+--				skiptime_clk(5);
+--				
+--				WB_DataIn <= "1010100101000100";
+--				WB_Cyc <= '1';
+--				WB_Addr <= (9 => '1',1 => '1', others => '0');
+--				WB_WE <= '0';
+--				WB_STB <= '1';
+--				WB_Sel <= "10";
+--				wait until rising_edge(clk_r);
+--				wait for 200 fs;
+--				WB_STB <= '0';
+--				skiptime_clk(10);
 				
 				--for 0x0204
 				WB_DataIn <= "0010100001011000";
@@ -248,7 +259,13 @@ begin
 				wait until rising_edge(clk_r);
 				wait for 200 fs;
 				WB_STB <= '0';
-				skiptime_clk(100);
+				skiptime_clk(50);
+				rdreq <= '1';
+				wait until rising_edge(clk_r);
+				wait for 200 fs;
+				rdreq <= '0';
+				skiptime_clk(20);
+				
 		end process;	
 
 end architecture;
