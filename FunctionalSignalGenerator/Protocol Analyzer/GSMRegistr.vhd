@@ -19,8 +19,8 @@ entity GSMRegister is
 		WB_CTI		: in	std_logic_vector(2 downto 0);
 
 		PRT_O						: out 	std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
-		Amplitude_OUT			: out 	std_logic_vector( 15 downto 0);
-		StartPhase_OUT			: out 	std_logic_vector( 15 downto 0);
+--		Amplitude_OUT			: out 	std_logic_vector( 15 downto 0);
+--		StartPhase_OUT			: out 	std_logic_vector( 15 downto 0);
 		CarrierFrequency_OUT	: out 	std_logic_vector(31 downto 0);
 		SymbolFrequency_OUT	: out 	std_logic_vector( 31 downto 0);
 		DataPort_OUT			: out 	std_logic_vector( 15 downto 0);--идет в FIFO
@@ -31,8 +31,8 @@ end entity GSMRegister;
 architecture Behavior of GSMRegister is
 	signal QH_r: std_logic_vector( 7 downto 0 );
 	signal QL_r: std_logic_vector( 7 downto 0 );
-	signal Amplitude_r: std_logic_vector( 15 downto 0 );
-	signal Start_Phase_r: std_logic_vector( 15 downto 0 );
+--	signal Amplitude_r: std_logic_vector( 15 downto 0 );
+--	signal Start_Phase_r: std_logic_vector( 15 downto 0 );
 	signal WB_DataOut_r: std_logic_vector(15 downto 0);
 	signal Carrier_Frequency_r: std_logic_vector( 31 downto 0 );
 	signal Symbol_Frequency_r: std_logic_vector( 31 downto 0 );
@@ -46,8 +46,8 @@ begin
 			if (nRst = '0') then
 				QH_r <= x"00";
 				QL_r <= x"00";
-				Amplitude_r <= x"0000";
-				Start_Phase_r <= x"0000";
+--				Amplitude_r <= x"0000";
+--				Start_Phase_r <= x"0000";
 				Carrier_Frequency_r <= x"00000000";
 				Symbol_Frequency_r <= x"00000000";
 				DataPort_r <= x"0000";
@@ -92,10 +92,10 @@ begin
 						if(WB_Sel(0) = '1') then
 							QL_r <= WB_DataIn( 7 downto 0 );
 						end if;
-					elsif(WB_Addr = x"0200") then
-						Amplitude_r <= WB_DataIn;
-					elsif(WB_Addr = x"0202") then
-						Start_Phase_r <= WB_DataIn;
+--					elsif(WB_Addr = x"0200") then
+--						Amplitude_r <= WB_DataIn;
+--					elsif(WB_Addr = x"0202") then
+--						Start_Phase_r <= WB_DataIn;
 					elsif(WB_Addr = x"0204") then
 						Carrier_Frequency_r( 31 downto 16 ) <= WB_DataIn;
 					elsif(WB_Addr = x"0206") then
@@ -112,10 +112,10 @@ begin
 				elsif(WB_WE = '0' and WB_STB = '1') then
 					if(WB_Addr = x"0000") then
 						WB_DataOut_r( 15 downto 0 ) <= QH_r & QL_r;
-					elsif(WB_Addr = x"0200") then
-						WB_DataOut_r <= Amplitude_r;
-					elsif(WB_Addr = x"0202") then
-						WB_DataOut_r <= Start_Phase_r;
+--					elsif(WB_Addr = x"0200") then
+--						WB_DataOut_r <= Amplitude_r;
+--					elsif(WB_Addr = x"0202") then
+--						WB_DataOut_r <= Start_Phase_r;
 					elsif(WB_Addr = x"0204") then
 						WB_DataOut_r <= Carrier_Frequency_r( 31 downto 16 );
 					elsif(WB_Addr = x"0206") then
@@ -131,10 +131,9 @@ begin
 			end if;
 			end if;
 		end process;
- 	PRT_O( 15 downto 8 ) <= QH_r;
-	PRT_O( 7 downto 0 ) <= QL_r;
-	Amplitude_OUT <= Amplitude_r;
-	StartPhase_OUT <= Start_Phase_r;
+ 	PRT_O( 15 downto 0 ) <= QH_r & QL_r;
+--	Amplitude_OUT <= Amplitude_r;
+--	StartPhase_OUT <= Start_Phase_r;
 	CarrierFrequency_OUT <= Carrier_Frequency_r;
 	SymbolFrequency_OUT <= Symbol_Frequency_r;
 	DataPort_OUT <= DataPort_r;
