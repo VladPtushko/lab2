@@ -22,12 +22,11 @@ architecture Serializer_arch of Serializer is
 	signal q_input_r: std_logic_vector(15 DOWNTO 0) := "0000000000000000";
 	signal usedw_count: std_logic_vector(10 downto 0) := "00000000000";
 	
-	signal input_number_count: integer range -1 to 18 := -1;
+	signal input_number_count: integer range -1 to 17 := -1;
 	-- -1 = NOT READING
-	-- 0 = READING FROM FIFO TO q_input
-	-- 1 = FIRST BIT
-	-- 2-17 = BITS[15:0]
-	-- 18 = LAST BIT
+	-- 0 = READING FROM FIFO TO q_input + sending FIRST BIT
+	-- 1-16 = BITS[15:0]
+	-- 17 = LAST BIT
 	
 	component fifo is 
 		port (
@@ -57,10 +56,10 @@ begin
 	process(clk)
 	begin
 	
-		if rising_edge(clk) then
+		if rising_edge(clk, FT2232H_FSCTS) then
 		
 			-- OPENING FOR READING
-			if input_number_count = 0 then
+			if CONV_INTEGER(unsigned(usedw_count)) > 0 and input_number_count = -1 then
 				rdreq_input_r <= '1';
 			else
 				rdreq_input_r <= '0';
@@ -70,15 +69,11 @@ begin
 			if input_number_count /= -1 then
 			
 				if input_number_count = 0 then
-					fsdi_r <= '1';
-				elsif input_number_count = 1 then
 					fsdi_r <= '0';
-				elsif input_number_count < 18 then
-					fsdi_r <= q_input_r(input_number_count - 2);
+				elsif input_number_count <= 16 then
+					fsdi_r <= q_input_r(input_number_count - 1);
 					
-				elsif input_number_count = 18 then
-					fsdi_r <= '0';
-				else
+				elsif input_number_count = 17 then
 					fsdi_r <= '1';
 				end if;
 			
@@ -88,9 +83,9 @@ begin
 			end if;
 			
 			-- INCREMENT COUNTER
-			if input_number_count = 18 then
+			if input_number_count = 17 then
 				input_number_count <= -1;
-			elsif input_number_count /= -1 then
+			elsif input_number_count /= -1 and (FT2232H_FSCTS = '0' or falling_edge(FT2232H_FSCTS)) then
 				input_number_count <= input_number_count + 1;
 			end if;
 			

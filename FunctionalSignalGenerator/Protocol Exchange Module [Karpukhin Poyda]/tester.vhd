@@ -27,7 +27,7 @@ architecture test_arch of tester is
 	signal package_5_r: std_logic_vector(15 downto 0) := "0001111000011110";
 	
 	signal sig_clk_r: std_logic := '1';
-	signal fsdo_r: std_logic := '1';
+	signal fsdo_r: std_logic;
 	signal rst_r: std_logic := '0';
 	signal fscts_r: std_logic := '1';
 	
@@ -64,9 +64,7 @@ begin
 				wait for clockPeriod_r;
 			end loop;
 			
-			serial_r <= '0';
-			wait for clockPeriod_r;
-			serial_r <= '1';
+			serial_r <= '1'; -- LAST BIT
 			wait for clockPeriod_r;
 		end procedure;
 		
@@ -79,6 +77,8 @@ begin
 			sig_wrreq_input_r <= '0';
 		end procedure;
 	begin
+		wait for 2 * clockPeriod_r;
+		
 		rdreq_output <= '0';
 		
 		send_to_serial(package_1_r, fsdo_r);
@@ -93,9 +93,13 @@ begin
 		fscts_r <= '1';
 		
 		send_to_deserialized(package_2_r);
+		send_to_deserialized(package_5_r);
+		
+		wait for 4 * clockPeriod_r;
+		
 		fscts_r <= '0';
 		
-		send_to_deserialized(package_5_r);
+		
 		
 		wait for 1000 ms;
 	end process;
