@@ -59,11 +59,22 @@ begin
 			serial_r <= '0';
 			wait for clockPeriod_r;
 			
-			for i in 0 to 15 loop
+			for i in 0 to 7 loop
 				serial_r <= pack_r(i);
 				wait for clockPeriod_r;
 			end loop;
+
+			serial_r <= '1'; -- LAST BIT
+			wait for clockPeriod_r;
+
+			serial_r <= '0';
+			wait for clockPeriod_r;
 			
+			for i in 8 to 15 loop
+				serial_r <= pack_r(i);
+				wait for clockPeriod_r;
+			end loop;
+
 			serial_r <= '1'; -- LAST BIT
 			wait for clockPeriod_r;
 		end procedure;
