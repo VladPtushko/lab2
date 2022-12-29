@@ -12,20 +12,18 @@ architecture a_modulator_tb of modulator_tb is
         port (
         clk : in std_logic;
         nRst : in std_logic;
-        Sync : in std_logic;
-        SignalMode : in std_logic_vector(1 downto 0);
         ModulationMode : in std_logic_vector(1 downto 0);
         Mode : in std_logic;
-        AmpErr : in std_logic;
         Amplitude : out std_logic_vector(15 downto 0);
         StartPhase : out std_logic_vector(15 downto 0);
-        CarrierFrequency : in std_logic_vector(31 downto 0);
         SymbolFrequency : in std_logic_vector(31 downto 0);
         DataPort : in std_logic_vector(15 downto 0);
         rdreq : out std_logic;
-        DDS_en: out std_logic 
-    );
+        empty : in std_logic;
+        DDS_en : out std_logic
+      );
     end component;
+    
 
     component modulator_tester
         port (
@@ -39,7 +37,8 @@ architecture a_modulator_tb of modulator_tb is
         CarrierFrequency : out std_logic_vector(31 downto 0);
         SymbolFrequency : out std_logic_vector(31 downto 0);
         DataPort : out std_logic_vector(15 downto 0);
-        rdreq: in std_logic
+        rdreq: in std_logic;
+        empty: out std_logic
         );
     end component;
 
@@ -57,26 +56,25 @@ architecture a_modulator_tb of modulator_tb is
     signal CarrierFrequency : std_logic_vector(31 downto 0);
     signal SymbolFrequency : std_logic_vector(31 downto 0);
     signal DataPort : std_logic_vector(15 downto 0);
+    signal empty : std_logic;
     signal rdreq : std_logic;
     signal DDS_en_r : std_logic;
 begin
     modulator_inst : modulator
     port map (
-      clk => clk,
-      nRst => nRst,
-      Sync => Sync,
-      SignalMode => SignalMode,
-      ModulationMode => ModulationMode,
-      Mode => Mode,
-      AmpErr => AmpErr,
-      Amplitude => Amplitude,
-      StartPhase => StartPhase,
-      CarrierFrequency => CarrierFrequency,
-      SymbolFrequency => SymbolFrequency,
-      DataPort => DataPort,
-      rdreq => rdreq,
-      DDS_en => DDS_en_r
+        clk => clk,
+        nRst => nRst,
+        ModulationMode => ModulationMode,
+        Mode => Mode,
+        Amplitude => Amplitude,
+        StartPhase => StartPhase,
+        SymbolFrequency => SymbolFrequency,
+        DataPort => DataPort,
+        rdreq => rdreq,
+        empty => empty,
+        DDS_en => DDS_en_r
     );
+
 
     modulator_tester_inst : modulator_tester
     port map (
@@ -90,7 +88,7 @@ begin
         CarrierFrequency => CarrierFrequency,
         SymbolFrequency => SymbolFrequency,
         DataPort => DataPort,
-        rdreq => rdreq
+        rdreq => rdreq,
+        empty => empty
     );
-
 end;

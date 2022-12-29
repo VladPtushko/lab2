@@ -42,8 +42,8 @@ entity modulator_modulation is
 
         -- Sync -- NOT USED
 
-        ByteReadRequest: out std_logic;
-        DDS_En: out std_logic
+        ByteReadRequest: out std_logic
+        -- DDS_En: out std_logic
     );
 end entity modulator_modulation;
 
@@ -67,7 +67,7 @@ architecture a_modulator_modulation of modulator_modulation is
     signal ByteReadRequest_r: std_logic;
     signal lut_address_r: std_logic_vector(5 downto 0);
 
-    signal DDS_En_r: std_logic;
+    -- signal DDS_En_r: std_logic;
 
     signal CalibrationData_r: std_logic_vector(9 downto 0);
     signal CalibrationByte_counter: std_logic_vector(2 downto 0);
@@ -75,7 +75,7 @@ architecture a_modulator_modulation of modulator_modulation is
     signal SessionModulation_r: std_logic_vector(1 downto 0);
     
 begin
-    DDS_En <= DDS_En_r;
+    -- DDS_En <= DDS_En_r;
 
     ByteReadRequest <= ByteReadRequest_r;
     lut_address <= lut_address_r;
@@ -99,9 +99,9 @@ begin
     begin
         if nRst = '0' then
             SymbolAccumulator_counter <= (others => '0'); 
-            DDS_En_r <= '0';
+            -- DDS_En_r <= '0';
         elsif rising_edge(clk) then
-            DDS_En_r <= '1';
+            -- DDS_En_r <= '1';
             Symbol_clock <= SymbolAccumulator_counter(31);
 
             -- TODO: simplify it

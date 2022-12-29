@@ -12,8 +12,11 @@ entity modulator_8b10 is
         ByteReadRequest: in std_logic;
         WordReadRequest: out std_logic;
 
+        empty: in std_logic;
+
         DataPort: in std_logic_vector(15 downto 0);
-        CodedData: out std_logic_vector(9 downto 0)
+        CodedData: out std_logic_vector(9 downto 0);
+        DDS_En: out std_logic
     );
 end entity modulator_8b10;
 
@@ -48,7 +51,8 @@ architecture a_modulator_8b10 of modulator_8b10 is
     signal CurrentByte_r: std_logic;
     signal CodedData_r : std_logic_vector(9 downto 0);
     signal DataOut_r : std_logic_vector(9 downto 0);
-    SIGNAL WordReadRequest_r: std_logic;
+    signal WordReadRequest_r: std_logic;
+    signal DDS_En_r: std_logic;
 begin
     enc_8b10b_inst : enc_8b10b
     port map (
@@ -83,19 +87,28 @@ begin
             CurrentByte_r <= '0'; -- minor byte first
             CodedData_r <= (others => '0');
             WordReadRequest_r <= '0';
+            DDS_En_r <= '0';
         elsif rising_edge(clk) then
             if (ByteReadRequest = '1') then
                 CurrentByte_r <= not CurrentByte_r;
                 CodedData_r <= DataOut_r;
-                WordReadRequest_r <= CurrentByte_r;
+
+                if (CurrentByte_r = '1' and empty = '0') then                    
+                    WordReadRequest_r <= '1';
+                    DDS_En_r <= '1';
+                elsif (CurrentByte_r = '1' and empty = '1') then
+                    WordReadRequest_r <= '0';
+                    DDS_En_r <= '0';
+                end if;
             elsif WordReadRequest_r = '1' then
                 WordReadRequest_r <= '0';
-            end if;
+            end if;            
         end if;
     end process;
 
     CodedData <= CodedData_r;
     WordReadRequest <= WordReadRequest_r;
+    DDS_En <= DDS_En_r;
 
     with CurrentByte_r select DataIn_r <=
         DataPort(15 downto 8) when '1',

@@ -31,7 +31,8 @@ entity modulator_tester is
 
 
         DataPort: out std_logic_vector(15 downto 0) := (others => '0');
-        rdreq: in std_logic
+        rdreq: in std_logic;
+        empty: out std_logic
     );
 end entity modulator_tester;
 
@@ -65,7 +66,7 @@ architecture a_modulator_tester of modulator_tester is
     
     signal DataIn: std_logic_vector(15 downto 0);
     signal wrreq : STD_LOGIC := '0';
-    signal empty : STD_LOGIC;
+    -- signal empty : STD_LOGIC;
     signal full : STD_LOGIC;
     signal usedw : STD_LOGIC_VECTOR (9 DOWNTO 0);
 begin
@@ -93,7 +94,7 @@ begin
     begin
         for i in 100 downto 0 loop
             data_counter <= data_counter + 1;
-            skiptime(1320);
+            skiptime(500);
             wrreq <= '1';
             skiptime(1);
             wrreq <= '0';
@@ -119,28 +120,57 @@ begin
 
     process
     begin
-        CarrierFrequency <= X"010003FF";
-        SymbolFrequency <= X"010003FF"; 
-        
         SignalMode <= "11";
-
+        Mode <= '0';
+        nRst <= '0';
         skiptime(1000);
 
         nRst <= '1';
+
+        CarrierFrequency <= X"010003FF";
+        SymbolFrequency <= X"010003FF"; 
+
+        skiptime(1000);
+       
         Mode <= '1';
 
         skiptime(1000);
 
-        ModulationMode <= "01";
-        skiptime(50000);
 
+        nRst <= '0';
         ModulationMode <= "10";
+        skiptime(10);
+        nRst <= '1';
         skiptime(50000);
 
+
+        nRst <= '0';
+        ModulationMode <= "01";
+        skiptime(10);
+        nRst <= '1';
+        skiptime(50000);
+
+
+        nRst <= '0';
         ModulationMode <= "00";
+        skiptime(10);
+        nRst <= '1';
         skiptime(50000);
             
+
         skiptime(1000);
+        SymbolFrequency <= X"030003FF";
+        skiptime(50000);
+
+        skiptime(1000);
+        SymbolFrequency <= X"7FFFFFFF";
+        skiptime(50000);
+
+        nRst <= '0';
+        ModulationMode <= "11";
+        skiptime(10);
+        nRst <= '1';
+        skiptime(50000);
 
         stop;
     end process;

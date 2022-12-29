@@ -10,16 +10,16 @@ entity modulator is
         nRst : in std_logic;
 
         -- SYSTEM CONTROL Register
-        Sync: in std_logic; -- O_PTR(6)
+        -- Sync: in std_logic; -- O_PTR(6)
         -- nRstDDS: in std_logic; -- O_PTR(5) -- TO DDS
-        SignalMode: in std_logic_vector(1 downto 0); -- O_PTR(4 downto 3)
+        -- SignalMode: in std_logic_vector(1 downto 0); -- O_PTR(4 downto 3)
         ModulationMode: in std_logic_vector(1 downto 0); -- O_PTR(2 downto 1)
         Mode: in std_logic;  -- O_PTR(0)
 
 
         -- DDS Register
         -- DDS Control (1 byte)
-        AmpErr: in std_logic;	-- DDSControl(3)
+        -- AmpErr: in std_logic;	-- DDSControl(3)
           
         -- SignalMode: in std_logic_vector(1 downto 0); -- DDSControl(1 downto 0)
         -- Amplitude  -- DDS()
@@ -30,30 +30,34 @@ entity modulator is
         -- ModulationRegister
         Amplitude: out std_logic_vector(15 downto 0);  -- TO DDS
         StartPhase: out std_logic_vector(15 downto 0);  -- TO DDS
-        CarrierFrequency: in std_logic_vector(31 downto 0);
+        -- CarrierFrequency: in std_logic_vector(31 downto 0);
         SymbolFrequency: in std_logic_vector(31 downto 0);
 
 
         DataPort: in std_logic_vector(15 downto 0);
         rdreq: out std_logic;
+        empty: in std_logic;
         DDS_en: out std_logic       
     );
 end entity modulator;
 
 architecture a_modulator of modulator is
   component modulator_8b10
-      port (
+    port (
       clk : in std_logic;
       nRst : in std_logic;
       ByteReadRequest : in std_logic;
       WordReadRequest : out std_logic;
+      empty : in std_logic;
       DataPort : in std_logic_vector(15 downto 0);
-      CodedData : out std_logic_vector(9 downto 0)
+      CodedData : out std_logic_vector(9 downto 0);
+      DDS_En : out std_logic
     );
   end component;
 
+
   component modulator_modulation
-      port (
+    port (
       clk : in std_logic;
       nRst : in std_logic;
       SymbolFrequency : in std_logic_vector(31 downto 0);
@@ -61,10 +65,10 @@ architecture a_modulator of modulator is
       lut_address : out std_logic_vector(5 downto 0);
       ModulationMode : in std_logic_vector(1 downto 0);
       Mode : in std_logic;
-      ByteReadRequest : out std_logic;
-      DDS_En: out std_logic
+      ByteReadRequest : out std_logic
     );
   end component;
+
 
   component modulator_lut
     port (
@@ -89,8 +93,10 @@ begin
       nRst => nRst,
       ByteReadRequest => ByteReadRequest,
       WordReadRequest => rdreq,
+      empty => empty,
       DataPort => DataPort,
-      CodedData => CodedData
+      CodedData => CodedData,
+      DDS_En => DDS_En
     );
 
   modulator_modulation_inst : modulator_modulation
@@ -102,8 +108,7 @@ begin
       lut_address => lut_address,
       ModulationMode => ModulationMode,
       Mode => Mode,
-      ByteReadRequest => ByteReadRequest,
-      DDS_En => DDS_En
+      ByteReadRequest => ByteReadRequest
     );
 
   modulator_lut_inst : modulator_lut
