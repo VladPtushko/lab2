@@ -66,7 +66,7 @@ architecture a_adc_control of adc_control is
 begin
     Dataflow_p: process (nRst, Clk_DataFlow)
     begin
-        if (nRst = '0') then
+--        if (nRst = '0') then
             Gain_s <= '0';
             OutputBusSelect_s <= '0';
             Standby_s  <= '0';
@@ -77,6 +77,6 @@ begin
             -- OutputBusSelect_s <= ReceiveDataMode;
 
             -- now we just ignore Q, not reconfigure ADC to parallel mode
-        end if;
+--        end if;
     end process;
 end architecture;

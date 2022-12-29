@@ -1,0 +1,692 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/FPGA/lab2/VectorNetworkAnalyzer/analyzer_dds_demultiplexer
+Eacc
+Z0 w1671211896
+Z1 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z2 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Z3 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z4 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+Z5 dD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly
+Z6 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/ACC.vhd
+Z7 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/ACC.vhd
+l0
+L5
+VUJIK3zWNPC0K2GV2M22kZ3
+!s100 A4kbbQQ7lX?GTO1G:I7[^2
+Z8 OV;C;10.5b;63
+33
+Z9 !s110 1672341079
+!i10b 1
+Z10 !s108 1672341079.000000
+Z11 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/ACC.vhd|
+Z12 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/ACC.vhd|
+!i113 1
+Z13 o-work work -2008 -explicit
+Z14 tExplicit 1 CvgOpt 0
+Abehavioral
+R1
+R2
+R3
+R4
+DEx4 work 3 acc 0 22 UJIK3zWNPC0K2GV2M22kZ3
+l21
+L19
+VQJ0Ib0]Eje1POib;6U4`<0
+!s100 ka2o0eXCd^f_XTTh6?3081
+R8
+33
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+R14
+Eadc_control
+Z15 w1672340811
+Z16 DPx4 ieee 16 std_logic_signed 0 22 C<aanc0R`<LWPSe[JYRP^3
+R1
+R3
+R4
+R5
+Z17 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/adc_control.vhd
+Z18 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/adc_control.vhd
+l0
+L49
+VA5h`UJbnU]dmQMi?M7B_Y0
+!s100 I6a7d=6;HBYlBc9_J<E241
+R8
+33
+R9
+!i10b 1
+R10
+Z19 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/adc_control.vhd|
+Z20 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/adc_control.vhd|
+!i113 1
+R13
+R14
+Aa_adc_control
+R16
+R1
+R3
+R4
+DEx4 work 11 adc_control 0 22 A5h`UJbnU]dmQMi?M7B_Y0
+l66
+L65
+VoD:0ne9LLVQZURTXdzL0<3
+!s100 Xc8oO=SR?fiA<Li;L:VOd0
+R8
+33
+R9
+!i10b 1
+R10
+R19
+R20
+!i113 1
+R13
+R14
+Eanalyzer_dds_demultiplexer_tester
+Z21 w1671970188
+Z22 DPx3 std 3 env 0 22 d?`1ck@NdeD@H3RZG7FgZ2
+R16
+R1
+R3
+R4
+R5
+Z23 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tester.vhd
+Z24 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tester.vhd
+l0
+L8
+VddgC4IS@_n?LhUBn@fW:m2
+!s100 8h]Vog``ASC`TYL[QL7842
+R8
+33
+Z25 !s110 1672341080
+!i10b 1
+Z26 !s108 1672341080.000000
+Z27 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tester.vhd|
+Z28 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tester.vhd|
+!i113 1
+R13
+R14
+Aa_analyzer_dds_demultiplexer_tester
+R22
+R16
+R1
+R3
+R4
+Z29 DEx4 work 33 analyzer_dds_demultiplexer_tester 0 22 ddgC4IS@_n?LhUBn@fW:m2
+l40
+L19
+Z30 V1HW>kfk56Mh3[i<9F:14>3
+Z31 !s100 n14S;_a_ne9_6H>@eho=40
+R8
+33
+R25
+!i10b 1
+R26
+R27
+R28
+!i113 1
+R13
+R14
+Edds
+Z32 w1671967565
+R3
+R4
+R5
+Z33 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS.vhd
+Z34 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS.vhd
+l0
+L4
+VIF@la9E;<AgRl@9T`IQIU1
+!s100 YB6lPUnc2c>hiKzlz9NRa2
+R8
+33
+R9
+!i10b 1
+R10
+Z35 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS.vhd|
+Z36 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R3
+R4
+Z37 DEx4 work 3 dds 0 22 IF@la9E;<AgRl@9T`IQIU1
+l83
+L28
+Vdj4UFW]l_G5Vc2T8_j5>Q2
+!s100 on70IEIY<S8MQHW2Pk=]n0
+R8
+33
+R9
+!i10b 1
+R10
+R35
+R36
+!i113 1
+R13
+R14
+Edds_tb
+Z38 w1672141242
+R16
+R1
+R3
+R4
+R5
+Z39 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tb.vhd
+Z40 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tb.vhd
+l0
+L6
+V5>e6_=>_mjMKgCE46136K0
+!s100 BA_<5a9]9hGY]e9n;@cfP0
+R8
+33
+R9
+!i10b 1
+R10
+Z41 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tb.vhd|
+Z42 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tb.vhd|
+!i113 1
+R13
+R14
+Asim
+Z43 DEx4 work 10 dds_tester 0 22 U<jMO`K71R]J<4fk[Q[N_1
+R37
+R16
+R1
+R3
+R4
+DEx4 work 6 dds_tb 0 22 5>e6_=>_mjMKgCE46136K0
+l63
+L9
+VF3zCC_0XTUfeUhlXjDUc>1
+!s100 BodnROzVE=_=YnO[ZNPi>2
+R8
+33
+R9
+!i10b 1
+R10
+R41
+R42
+!i113 1
+R13
+R14
+Edds_tester
+R38
+R3
+R4
+R5
+Z44 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tester.vhd
+Z45 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tester.vhd
+l0
+L4
+VU<jMO`K71R]J<4fk[Q[N_1
+!s100 gOeE]1F?JV<>f:>lYYYJN1
+R8
+33
+R9
+!i10b 1
+R10
+Z46 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tester.vhd|
+Z47 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/DDS_tester.vhd|
+!i113 1
+R13
+R14
+Aa_dds_tester
+R3
+R4
+R43
+l31
+L19
+V`FiG7`]mDg9UDDijn4YQB3
+!s100 WPdNdX0U<MAKAj9Qi8lhS0
+R8
+33
+R9
+!i10b 1
+R10
+R46
+R47
+!i113 1
+R13
+R14
+Edemultiplexer
+Z48 w1671996540
+R16
+R1
+R3
+R4
+R5
+Z49 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer.vhd
+Z50 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer.vhd
+l0
+L6
+VHi`;f8lfEBB>K;eSK;`zh0
+!s100 0nOV8TOeaZRZdST3KBWdf1
+R8
+33
+R9
+!i10b 1
+R10
+Z51 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer.vhd|
+Z52 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer.vhd|
+!i113 1
+R13
+R14
+Aa_demultiplexer
+R16
+R1
+R3
+R4
+DEx4 work 13 demultiplexer 0 22 Hi`;f8lfEBB>K;eSK;`zh0
+l29
+L23
+VWhAdPIHCYh:ki;Y@`Z:j01
+!s100 DFAnVmec6GmfWBFYlRJBN1
+R8
+33
+R9
+!i10b 1
+R10
+R51
+R52
+!i113 1
+R13
+R14
+Edemultiplexer_tb
+Z53 w1671525599
+R16
+R1
+R3
+R4
+R5
+Z54 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tb.vhd
+Z55 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tb.vhd
+l0
+L6
+VZaLN3:nc]A>Y?Rh8UZ`if3
+!s100 j1ll1IGPzd94@b:fC01c<3
+R8
+33
+R9
+!i10b 1
+R10
+Z56 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tb.vhd|
+Z57 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tb.vhd|
+!i113 1
+R13
+R14
+Aa_demultiplexer_tb
+R22
+Z58 DEx4 work 20 demultiplexer_tester 0 22 2lgXTVVzKgDf;Xim9]@mI2
+R16
+R1
+R3
+R4
+DEx4 work 16 demultiplexer_tb 0 22 ZaLN3:nc]A>Y?Rh8UZ`if3
+l57
+L9
+VM4`Hc>f8zGU1Nh2PZV?L32
+!s100 oSHcgmKe@<d>k1VKd1<]91
+R8
+33
+R9
+!i10b 1
+R10
+R56
+R57
+!i113 1
+R13
+R14
+Edemultiplexer_tester
+Z59 w1671915113
+R22
+R16
+R1
+R3
+R4
+R5
+Z60 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tester.vhd
+Z61 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tester.vhd
+l0
+L8
+V2lgXTVVzKgDf;Xim9]@mI2
+!s100 CH^zgg7[bk<5izL1[AnAW2
+R8
+33
+R9
+!i10b 1
+R10
+Z62 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tester.vhd|
+Z63 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_tester.vhd|
+!i113 1
+R13
+R14
+Aa_demultiplexer_tester
+R22
+R16
+R1
+R3
+R4
+R58
+l40
+L19
+VJMSi4O:Oi1Sb?cFV;9HUj1
+!s100 jdd[AX5AEecEVUX<JeVbH0
+R8
+33
+R9
+!i10b 1
+R10
+R62
+R63
+!i113 1
+R13
+R14
+Edemultiplexer_top
+Z64 w1671528100
+R3
+R4
+R5
+Z65 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_top.vhd
+Z66 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_top.vhd
+l0
+L4
+VVLE?o52_3TNH8^7[V?T@93
+!s100 01c8B56R^QOJeFCFW8HFo1
+R8
+33
+R9
+!i10b 1
+R10
+Z67 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_top.vhd|
+Z68 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/demultiplexer_top.vhd|
+!i113 1
+R13
+R14
+Artl
+R3
+R4
+Z69 DEx4 work 17 demultiplexer_top 0 22 VLE?o52_3TNH8^7[V?T@93
+l56
+L28
+VZD3WOE@KnAm8nLmTm?:6@1
+!s100 lg7BbV9[4kJ`1B<F1?4eb3
+R8
+33
+R9
+!i10b 1
+R10
+R67
+R68
+!i113 1
+R13
+R14
+Efgen
+Z70 w1670830472
+R3
+R4
+R5
+Z71 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/FGen.vhd
+Z72 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/FGen.vhd
+l0
+L4
+VJ3WCmJD`I;@Y5@IU8:RV00
+!s100 4X0J7zEO:7zKJ<YY3nWd;2
+R8
+33
+R25
+!i10b 1
+R26
+Z73 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/FGen.vhd|
+Z74 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/FGen.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R3
+R4
+DEx4 work 4 fgen 0 22 J3WCmJD`I;@Y5@IU8:RV00
+l15
+L13
+V_S;a=Nj4_3;h7P[oe`;240
+!s100 ZFVSz]hSnMM[I_?CG:Yc72
+R8
+33
+R25
+!i10b 1
+R26
+R73
+R74
+!i113 1
+R13
+R14
+Efir_filter_4
+Z75 w1672339450
+Z76 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+R3
+R4
+R5
+Z77 8D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/FIR.vhd
+Z78 FD:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/FIR.vhd
+l0
+L4
+ViLh;nOW9>mA878K3kYbEB0
+!s100 a]M6WNbL6<O?f6?STDZIl1
+R8
+33
+R25
+!i10b 1
+R26
+Z79 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/FIR.vhd|
+Z80 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/FIR.vhd|
+!i113 1
+R13
+R14
+Artl
+R76
+R3
+R4
+DEx4 work 12 fir_filter_4 0 22 iLh;nOW9>mA878K3kYbEB0
+l37
+L16
+VIaJG<n5kLI;67FbKmjECl0
+!s100 W^;W:?3X:1jVgIU1hQOzW0
+R8
+33
+R25
+!i10b 1
+R26
+R79
+R80
+!i113 1
+R13
+R14
+Egeterodine_module
+R75
+R16
+R1
+R3
+R4
+R5
+Z81 8D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/Geterodine_module.vhd
+Z82 FD:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/Geterodine_module.vhd
+l0
+L6
+VJezIQb`e7@InkII=Ro2_J2
+!s100 Wgj:L0a6[<G_YOZ_oHlin3
+R8
+33
+R25
+!i10b 1
+R26
+Z83 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/Geterodine_module.vhd|
+Z84 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/Geterodine_module.vhd|
+!i113 1
+R13
+R14
+Ageterodine_module_arch
+R16
+R1
+R3
+R4
+Z85 DEx4 work 17 geterodine_module 0 22 JezIQb`e7@InkII=Ro2_J2
+l70
+L28
+VQ=8G8mmWAMWT=^jUjL@aD1
+!s100 1lW5:TCn43hhf8cPCS79W3
+R8
+33
+R25
+!i10b 1
+R26
+R83
+R84
+!i113 1
+R13
+R14
+Eseparator
+R75
+R16
+R1
+R3
+R4
+R5
+Z86 8D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/separator.vhd
+Z87 FD:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/separator.vhd
+l0
+L6
+VdlUj4=XDZ3Vgdk>nzC`Dj3
+!s100 44GN[G52lE9FeX^XnM7A51
+R8
+33
+R25
+!i10b 1
+R26
+Z88 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/separator.vhd|
+Z89 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/geterodin_module/separator.vhd|
+!i113 1
+R13
+R14
+Aseparator_arch
+R16
+R1
+R3
+R4
+DEx4 work 9 separator 0 22 dlUj4=XDZ3Vgdk>nzC`Dj3
+l51
+L37
+V=clYOi6=DZ]SEn4:P2<0X3
+!s100 27UGWhOzj<ZFVjh`B3lTa1
+R8
+33
+R25
+!i10b 1
+R26
+R88
+R89
+!i113 1
+R13
+R14
+Etb
+Z90 w1672340351
+R3
+R4
+R5
+Z91 8D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tb.vhd
+Z92 FD:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tb.vhd
+l0
+L4
+ViI[^M_X_An:2H>5Lan5Kf1
+!s100 CFVfc2IT]m8lR>cnRbElY1
+R8
+33
+R25
+!i10b 1
+R26
+Z93 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tb.vhd|
+Z94 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/demultiplexer/assembly/analyzer_dds_demultiplexer_tb.vhd|
+!i113 1
+R13
+R14
+Aa_analyzer_dds_demultiplexer_tb
+R85
+R22
+R16
+R1
+R29
+R43
+R37
+R69
+R3
+R4
+DEx4 work 2 tb 0 22 iI[^M_X_An:2H>5Lan5Kf1
+l41
+L7
+V1gzD37anO9hPZOAz`eWm12
+!s100 @771hJUXRJ@>[FD2T_IL92
+R8
+33
+R25
+!i10b 1
+R26
+R93
+R94
+!i113 1
+R13
+R14
+Ewb
+Z95 w1672045614
+R1
+R2
+R3
+R4
+R5
+Z96 8D:/FPGA/lab2/VectorNetworkAnalyzer/dds/WB.vhd
+Z97 FD:/FPGA/lab2/VectorNetworkAnalyzer/dds/WB.vhd
+l0
+L5
+V>0U>23l<d@OBnTKHaO@>c0
+!s100 g32>=GL9eliBT?jEezikQ0
+R8
+33
+R25
+!i10b 1
+R26
+Z98 !s90 -reportprogress|300|-work|work|-2008|-explicit|-stats=none|D:/FPGA/lab2/VectorNetworkAnalyzer/dds/WB.vhd|
+Z99 !s107 D:/FPGA/lab2/VectorNetworkAnalyzer/dds/WB.vhd|
+!i113 1
+R13
+R14
+Abehavioral
+R1
+R2
+R3
+R4
+DEx4 work 2 wb 0 22 >0U>23l<d@OBnTKHaO@>c0
+l43
+L30
+V2Pl`c9EOlFaZok@Y`ShOD0
+!s100 PfbHKgV30cLM13U7YC57:2
+R8
+33
+R25
+!i10b 1
+R26
+R98
+R99
+!i113 1
+R13
+R14

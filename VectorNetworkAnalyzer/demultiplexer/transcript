@@ -1,0 +1,17 @@
+# vsim -coverage work.demultiplexer_tb 
+# Start time: 16:45:01 on Dec 25,2022
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_signed(body)
+# Loading std.env(body)
+# Loading work.demultiplexer_tb(a_demultiplexer_tb)
+# Loading work.demultiplexer_top(rtl)
+# Loading work.demultiplexer(a_demultiplexer)
+# Loading work.adc_control(a_adc_control)
+# Loading work.demultiplexer_tester(a_demultiplexer_tester)
+# ** Error: This product is not licensed for Code Coverage.
+# Error loading design
+# End time: 16:45:01 on Dec 25,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
