@@ -17,8 +17,8 @@ entity GSMRegistr_top is
 		  WB_CTI		: in	std_logic_vector(2 downto 0);
     
         PRT_O: out std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
-        Amplitude_OUT: out std_logic_vector( 15 downto 0);
-        StartPhase_OUT: out std_logic_vector( 15 downto 0);
+--        Amplitude_OUT: out std_logic_vector( 15 downto 0);
+--       StartPhase_OUT: out std_logic_vector( 15 downto 0);
         CarrierFrequency_OUT: out std_logic_vector(31 downto 0);
         SymbolFrequency_OUT: out std_logic_vector( 31 downto 0);
         
@@ -62,8 +62,8 @@ architecture rtl of GSMRegistr_top is
 		WB_CTI		: in	std_logic_vector(2 downto 0);
 
 		PRT_O						: out 	std_logic_vector( 15 downto 0 ); --данные для кодирования и модуляции
-		Amplitude_OUT			: out 	std_logic_vector( 15 downto 0);
-		StartPhase_OUT			: out 	std_logic_vector( 15 downto 0);
+--		Amplitude_OUT			: out 	std_logic_vector( 15 downto 0);
+--		StartPhase_OUT			: out 	std_logic_vector( 15 downto 0);
 		CarrierFrequency_OUT	: out 	std_logic_vector(31 downto 0);
 		SymbolFrequency_OUT	: out 	std_logic_vector( 31 downto 0);
 		DataPort_OUT			: out 	std_logic_vector( 15 downto 0);--идет в FIFO
@@ -71,9 +71,9 @@ architecture rtl of GSMRegistr_top is
 		full : in std_logic
 	);
 	end component;
-    signal wrreq : std_logic;
-	 signal full_r : std_logic;
-    signal DataPort_r: std_logic_vector( 15 downto 0 );
+    signal wrreq : std_logic 	:= '0';
+	 signal full_r : std_logic := '0';
+    signal DataPort_r: std_logic_vector( 15 downto 0 ) := (others=>'0');
 begin
 		full <= full_r;
     GSMRegister_inst : GSMRegister
@@ -90,8 +90,8 @@ begin
         WB_Ack => WB_Ack,
         WB_CTI => WB_CTI,
         PRT_O => PRT_O,
-        Amplitude_OUT => Amplitude_OUT,
-        StartPhase_OUT => StartPhase_OUT,
+ --       Amplitude_OUT => Amplitude_OUT,
+ --       StartPhase_OUT => StartPhase_OUT,
         CarrierFrequency_OUT => CarrierFrequency_OUT,
         SymbolFrequency_OUT => SymbolFrequency_OUT,
         DataPort_OUT => DataPort_r,
