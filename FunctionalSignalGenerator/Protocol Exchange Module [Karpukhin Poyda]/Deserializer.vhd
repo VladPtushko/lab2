@@ -57,7 +57,7 @@ begin
 			
 			-- STORAGING SERIAL INPUT
 			if state_r >= 0 and state_r <= 7 then
-				if is_second_byte_r = '1' then
+				if is_second_byte_r = '0' then
 					data_output_r(state_r) <= FT2232H_FSDO;
 				else
 					data_output_r(state_r + 8) <= FT2232H_FSDO;
@@ -71,6 +71,14 @@ begin
 				wrreq_r <= '0';
 			end if;
 			
+			if state_r = 8 and is_second_byte_r = '1' then -- + THERE IS LAST BIT SKIP
+				is_second_byte_r <= '0';
+			elsif state_r = 8 and is_second_byte_r = '0' then 
+				is_second_byte_r <= '1';
+			end if;
+			
+			
+			-- UPDATE STATE	
 			if state_r = -1 and  FT2232H_FSDO ='0' then -- FIRST BIT IS 0
 				state_r <= 0;
 				

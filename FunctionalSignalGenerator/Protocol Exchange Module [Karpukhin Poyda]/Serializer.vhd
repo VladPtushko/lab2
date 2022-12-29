@@ -60,7 +60,6 @@ begin
 	begin
 	
 		if rising_edge(clk) then
-		
 			-- OPENING FOR READING
 			if CONV_INTEGER(unsigned(usedw_count)) > 0 and state_r = -1 then
 				rdreq_input_r <= '1';
@@ -68,20 +67,34 @@ begin
 				rdreq_input_r <= '0';
 			end if;
 			
+			-- INCREMENT STATE
+			if state_r = 19 then
+				state_r <= -1;
+			elsif state_r = 0 then
+				state_r <= 1;
+			elsif state_r /= -1 and FT2232H_FSCTS = '0' then
+				state_r <= state_r + 1;
+			end if;
+			
+			-- DETECTING COUNT INCREASING WHEN NOT READING
+			if  CONV_INTEGER(unsigned(usedw_count)) > 0 and state_r = -1 then
+				state_r <= 0;
+			end if;
+			
 			-- FSDI
 			if state_r /= -1 then
 			
 				if state_r = 0 then
 					fsdi_r <= '0';
-				elsif state_r <= 8 then
+				elsif state_r >= 1 and state_r <= 8 then
 					fsdi_r <= q_input_r(state_r - 1);
-				else if state_r = 9 then
+				elsif state_r = 9 then
 					fsdi_r <= '1';
 
 				elsif state_r = 10 then
 					fsdi_r <= '0';
-				elsif state_r <= 18 then
-					fsdi_r <= q_input_r(state_r - 2);
+				elsif state_r >= 11 and state_r <= 18 then
+					fsdi_r <= q_input_r(state_r - 3);
 				elsif state_r = 19 then
 					fsdi_r <= '1';
 				end if;
@@ -91,18 +104,7 @@ begin
 
 			end if;
 			
-			-- INCREMENT COUNTER
-			if state_r = 19 then
-				state_r <= -1;
-			elsif state_r /= -1 and FT2232H_FSCTS = '0' then
-				state_r <= state_r + 1;
-			end if;
 			
-			
-			-- DETECTING COUNT INCREASING WHEN NOT READING
-			if  CONV_INTEGER(unsigned(usedw_count)) > 0 and state_r = -1 then
-				state_r <= 0;
-			end if;
 			
 		end if;
 	

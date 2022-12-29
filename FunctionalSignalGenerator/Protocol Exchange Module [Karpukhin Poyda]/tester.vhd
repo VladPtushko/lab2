@@ -94,19 +94,20 @@ begin
 		
 		send_to_serial(package_1_r, fsdo_r);
 		send_to_serial(package_3_r, fsdo_r);
+		wait for clockPeriod_r;
 		rdreq_output <= '1';
 		
 		wait for 2 * clockPeriod_r;
 		rdreq_output <= '0';
 		
-		wait for 50 ms;
+		wait for 50 ms + 10 us;
 		
 		fscts_r <= '1';
 		
 		send_to_deserialized(package_2_r);
 		send_to_deserialized(package_5_r);
 		
-		wait for 4 * clockPeriod_r;
+		wait for 4 * clockPeriod_r - 10 us;
 		
 		fscts_r <= '0';
 		
