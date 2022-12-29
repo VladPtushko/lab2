@@ -126,8 +126,10 @@ begin
             CalibrationNeeded_r <= '1'; -- need to calibrate before use
             CalibrationByte_counter <= (others => '0') ;
         elsif rising_edge(clk) then
-            if (shifted_10bit_counter = 0) then -- when data is loading 
-                -- I need to start calibration after modulation mode change (on reset only)
+            if (Mode = '0') then
+                CalibrationNeeded_r <= '1';
+            elsif (shifted_10bit_counter = 0) then -- when data is loading 
+                -- I need to start calibration after modulation mode change (on reset or Mode only)
                 -- It will be 6x10 bit words, because 60 is least common multiple of 2, 3, 4, 10
 
                 if (CalibrationNeeded_r = '1') then
@@ -135,6 +137,7 @@ begin
                         SessionModulation_r <= ModulationMode;
                     elsif (CalibrationByte_counter = B"101") then
                         CalibrationNeeded_r <= '0';
+                        CalibrationByte_counter <= (others => '0') ;
                     end if;
 
                     CalibrationByte_counter <= CalibrationByte_counter + 1;

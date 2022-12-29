@@ -1,0 +1,249 @@
+{D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_top.vhd} {1 {vcom -work work -2008 -explicit -stats=none {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_top.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity GSMRegistr_top
+-- Compiling architecture rtl of GSMRegistr_top
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator_modulation
+-- Compiling architecture a_modulator_modulation of modulator_modulation
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_generator.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_generator.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity generator_generator
+-- Compiling architecture a_generator_generator of generator_generator
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/sin_lut.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/sin_lut.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity sin_lut
+-- Compiling architecture a_sin_lut of sin_lut
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator_assembly2/generator_assembly.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator_assembly2/generator_assembly.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity generator_assembly2
+-- Compiling architecture a_generator_assembly of generator_assembly2
+-- Loading entity modulator
+-- Loading entity generator_top
+-- Loading entity GSMRegistr_top
+-- Loading package ENV
+-- Loading entity generator_assembly2_tester
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity generator
+-- Compiling architecture a_generator of generator
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator
+-- Compiling architecture a_modulator of modulator
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/enc_8b10b_TB.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/enc_8b10b_TB.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity enc_8b10b_tb
+-- Compiling architecture TB_ARCHITECTURE of enc_8b10b_tb
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/8b10_enc.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/8b10_enc.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity enc_8b10b
+-- Compiling architecture behavioral of enc_8b10b
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_8b10.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_8b10.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator_8b10
+-- Compiling architecture a_modulator_8b10 of modulator_8b10
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_top.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_top.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Compiling entity generator_top
+-- Compiling architecture a_generator_top of generator_top
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_lut.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_lut.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator_lut
+-- Compiling architecture a_modulator_lut of modulator_lut
+
+} {} {}} {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_FIFO.vhd} {1 {vcom -work work -2008 -explicit -stats=none {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_FIFO.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity GSMRegistr_FIFO
+-- Compiling architecture SYN of gsmregistr_fifo
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_tb.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity generator_tb
+-- Compiling architecture bench of generator_tb
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading entity generator_top
+-- Loading package ENV
+-- Loading entity generator_tester
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_tb.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator_tb
+-- Compiling architecture a_modulator_tb of modulator_tb
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_tester.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_tester.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package ENV
+-- Compiling entity modulator_tester
+-- Compiling architecture a_modulator_tester of modulator_tester
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator_assembly2/generator_assembly_tester.vhd {2 {vcom -work work -2002 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator_assembly2/generator_assembly_tester.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package ENV
+** Warning: D:/FPGA/lab2/FunctionalSignalGenerator/generator_assembly2/generator_assembly_tester.vhd(7): (vcom-1516) Package "STD.ENV" does not exist in this language version.
+-- Compiling entity generator_assembly2_tester
+-- Compiling architecture a_generator_assembly of generator_assembly2_tester
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_tester.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/generator_tester.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Loading package ENV
+-- Compiling entity generator_tester
+-- Compiling architecture a_generator_tester of generator_tester
+
+} {} {}} {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_tb.vhd} {1 {vcom -work work -2008 -explicit -stats=none {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_tb.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity GSMRegistr_top_tb
+-- Compiling architecture bench of GSMRegistr_top_tb
+
+} {} {}} {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_tester.vhd} {1 {vcom -work work -2008 -explicit -stats=none {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr_tester.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity GSMRegistr_tester
+-- Compiling architecture rtl of GSMRegistr_tester
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation_tb.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity modulator_modulation_tb
+-- Compiling architecture bench of modulator_modulation_tb
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/generator/sin_generator.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/generator/sin_generator.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_SIGNED
+-- Compiling entity sin_generator
+-- Compiling architecture a_sin_generator of sin_generator
+
+} {} {}} D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation_tester.vhd {1 {vcom -work work -2008 -explicit -stats=none D:/FPGA/lab2/FunctionalSignalGenerator/Modulator/modulator_modulation_tester.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package ENV
+-- Compiling entity modulator_modulation_tester
+-- Compiling architecture a_modulator_modulation_tester of modulator_modulation_tester
+
+} {} {}} {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr.vhd} {1 {vcom -work work -2008 -explicit -stats=none {D:/FPGA/lab2/FunctionalSignalGenerator/Protocol Analyzer/GSMRegistr.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity GSMRegister
+-- Compiling architecture Behavior of GSMRegister
+
+} {} {}}

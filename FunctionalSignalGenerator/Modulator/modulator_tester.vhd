@@ -123,38 +123,32 @@ begin
         SignalMode <= "11";
         Mode <= '0';
         nRst <= '0';
-        skiptime(1000);
+        skiptime(500);
 
         nRst <= '1';
 
         CarrierFrequency <= X"010003FF";
         SymbolFrequency <= X"010003FF"; 
 
-        skiptime(1000);
-       
-        Mode <= '1';
 
-        skiptime(1000);
-
-
-        nRst <= '0';
+        Mode <= '0';
         ModulationMode <= "10";
-        skiptime(10);
-        nRst <= '1';
+        skiptime(600);
+        Mode <= '1';
         skiptime(50000);
 
 
-        nRst <= '0';
+        Mode <= '0';
         ModulationMode <= "01";
         skiptime(10);
-        nRst <= '1';
+        Mode <= '1';
         skiptime(50000);
 
 
-        nRst <= '0';
+        Mode <= '0';
         ModulationMode <= "00";
         skiptime(10);
-        nRst <= '1';
+        Mode <= '1';
         skiptime(50000);
             
 
@@ -166,10 +160,10 @@ begin
         SymbolFrequency <= X"7FFFFFFF";
         skiptime(50000);
 
-        nRst <= '0';
+        Mode <= '0';
         ModulationMode <= "11";
         skiptime(10);
-        nRst <= '1';
+        Mode <= '1';
         skiptime(50000);
 
         stop;

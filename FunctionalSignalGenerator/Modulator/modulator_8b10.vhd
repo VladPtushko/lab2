@@ -60,14 +60,14 @@ begin
         SBYTECLK => clk,
 
         KI => '0', -- Control (K) input(active high)
-        AI => DataIn_r(7),
-        BI => DataIn_r(6),
-        CI => DataIn_r(5),
-        DI => DataIn_r(4),
-        EI => DataIn_r(3),
-        FI => DataIn_r(2),
-        GI => DataIn_r(1),
-        HI => DataIn_r(0),
+        BI => DataIn_r(0),
+        AI => DataIn_r(1),
+        CI => DataIn_r(2),
+        DI => DataIn_r(3),
+        EI => DataIn_r(4),
+        FI => DataIn_r(5),
+        GI => DataIn_r(6),
+        HI => DataIn_r(7),
 
         JO => DataOut_r(9),
         HO => DataOut_r(8),
@@ -87,7 +87,7 @@ begin
             CurrentByte_r <= '0'; -- minor byte first
             CodedData_r <= (others => '0');
             WordReadRequest_r <= '0';
-            DDS_En_r <= '0';
+            DDS_En_r <= '1';
         elsif rising_edge(clk) then
             if (ByteReadRequest = '1') then
                 CurrentByte_r <= not CurrentByte_r;
