@@ -32,13 +32,14 @@ architecture a_generator_assembly_tb of generator_assembly_tb is
           nRst : in std_logic :='0';
             IData_In :in STD_LOGIC_VECTOR(9 downto 0):=(others => '0');
               QData_In :in STD_LOGIC_VECTOR(9 downto 0):=(others => '0');
-              DataValid : in std_logic :='0';
+              DataValid : in std_logic :='1';
               DataStrobe : out std_logic :='0';
             address_in_division_lut		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0):=(others => '0');
           clock		: OUT STD_LOGIC  := '1';
           division_number		: IN STD_LOGIC_VECTOR (8 DOWNTO 0):=(others => '0');
-		  modulation_mode :OUT unsigned(1 downto 0) :=(others => '1');
-		  useful_information :OUT STD_LOGIC_VECTOR(3 downto 0) :=(others => '0')
+		  modulation_mode :OUT std_logic_vector(1 downto 0) :=(others => '1');
+		  useful_information :OUT STD_LOGIC_VECTOR(3 downto 0) :=(others => '0');
+      delay :OUT std_logic_vector(4 downto 0):=(others => '1')
         );
         
       end component;
@@ -50,6 +51,20 @@ architecture a_generator_assembly_tb of generator_assembly_tb is
             division_number		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0):=(others => '0')
         );
     end component division_lut;
+
+      component MA is
+        port (
+         i_clk			: in	std_logic;
+         i_nRst		: in	std_logic;
+         IData_In		: in	std_logic_vector(10-1 downto 0);
+         QData_In		: in	std_logic_vector(10-1 downto 0);
+        
+         MANumber		: in	std_logic_vector(5-1 downto 0);
+    
+          IData_Out		: out	std_logic_vector(10-1 downto 0);
+          QData_out		: out	std_logic_vector(10-1 downto 0)
+        );
+      end component;
 
     component modulator_tester
         port (
@@ -105,11 +120,15 @@ architecture a_generator_assembly_tb of generator_assembly_tb is
     signal DAC_I_s : std_logic_vector(9 downto 0);
     signal DAC_Q_s : std_logic_vector(9 downto 0);
 
-    signal DataValid :  std_logic :='0';
+    signal DataValid :  std_logic :='1';
 	signal BufDataOut: STD_LOGIC_VECTOR(15 downto 0):=(others => '0');
 	signal DataStrobe : std_logic :='0';
-	signal modulation_mode : unsigned(1 downto 0) :=(others => '1');
+	signal modulation_mode : std_logic_vector(1 downto 0) :=(others => '1');
 	signal useful_information : STD_LOGIC_VECTOR(3 downto 0) :=(others => '0');
+  signal delay : std_logic_vector(4 downto 0):=(others => '1');
+  signal IData_Out		:	std_logic_vector(10-1 downto 0);
+  signal QData_Out		: std_logic_vector(10-1 downto 0);
+
 begin
     modulator_inst : modulator
     port map (
@@ -143,6 +162,19 @@ begin
 	  modulation_mode=>modulation_mode,
 	  useful_information=>useful_information
     );
+
+    MA_inst  : MA
+      port map (
+       i_clk => clk,			
+       i_nRst	=> nRst,	
+       IData_In	=> DAC_I_s,
+       QData_In	=> DAC_Q_s,
+      
+       MANumber=> delay,
+  
+        IData_Out	=>IData_Out,
+        QData_Out	=>QData_Out	
+      );
 
     modulator_tester_inst : modulator_tester
     port map (
