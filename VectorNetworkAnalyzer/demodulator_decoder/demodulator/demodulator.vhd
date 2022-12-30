@@ -7,18 +7,19 @@ use IEEE.std_logic_unsigned.all;
 
 
 entity demodulator is
-	port(clk : in std_logic :='0';
+	port(
+	clk : in std_logic :='0';
 	nRst : in std_logic :='0';
 	IData_In :in STD_LOGIC_VECTOR(9 downto 0):=(others => '0');
 	QData_In :in STD_LOGIC_VECTOR(9 downto 0):=(others => '0');
-	DataValid : in std_logic :='0';
+	DataValid : in std_logic :='1';
 	DataStrobe : out std_logic :='0';
-
 	address_in_division_lut		: OUT STD_LOGIC_VECTOR (8 DOWNTO 0):=(others => '0');
 	clock		: OUT STD_LOGIC  := '1';
     division_number		: in STD_LOGIC_VECTOR (8 DOWNTO 0):=(others => '0');
-	modulation_mode :OUT unsigned(1 downto 0) :=(others => '1');
-	delay :OUT unsigned(9 downto 0):=(others => '1');
+	modulation_mode :OUT std_logic_vector(1 downto 0) :=(others => '1');
+	delay :OUT std_logic_vector(4 downto 0):="00001";
+	useful_information_strobe :out std_logic:= '0';
 	useful_information :OUT STD_LOGIC_VECTOR(3 downto 0) :=(others => '0')
 	);
 end entity demodulator;
@@ -38,6 +39,7 @@ constant  limit_sensivity_differencial_const : integer:=100;
 constant mean_testing_time_const : integer:= 1000;
 constant number_of_bytes_const : integer:= 10;
 constant time_not_react_const: integer:=7;
+constant in_luts_const: integer:=7;
 
 
 signal modulation_mode_r : unsigned(1 downto 0) :=(others => '1');
@@ -49,15 +51,13 @@ signal	delay_QData_In_r : STD_LOGIC_VECTOR(9 downto 0):=(others => '0');
 signal	delay_r : unsigned(9 downto 0):=(others => '1');
 signal	count_delay_r : unsigned(9 downto 0):=(others => '0');
 signal	count_testing_time_r : unsigned(10 downto 0):=(others => '0');
-signal	count_time_r : unsigned(9 downto 0):=(others => '0');
 signal	amplitude_r : signed(19 downto 0):=(others => '0');
 signal corner_r: signed(19 downto 0):=(others => '0');
-type t_amplitude_lut is array (0 to 7) of unsigned(19 downto 0);
+type t_amplitude_lut is array (0 to in_luts_const) of unsigned(19 downto 0);
 signal amplitude_lut : t_amplitude_lut:=(others => (others => '0'));
-type t_corner_lut is array (0 to 7) of signed(19 downto 0);
+type t_corner_lut is array (0 to in_luts_const) of signed(19 downto 0);
 signal corner_lut : t_corner_lut:=(others => (others => '0'));
 signal  indicator_revolt_differencial : integer:= 0;
-signal  indicator_out : integer:= 0;
 signal in_luts: integer:=0;
 
 function modulation_identification (amplitude_lut :in t_amplitude_lut; corner_lut : in t_corner_lut; in_lut:in integer)
@@ -67,14 +67,14 @@ function modulation_identification (amplitude_lut :in t_amplitude_lut; corner_lu
 	variable identification_change_amplitude : integer := 0;
 	variable identification_coincidences_corner : integer := 0;
 	variable number_corners: integer := 1;
-	variable inaccuracy_amplitude: integer := 20000;
-	variable inaccuracy_corner: integer := 600;
-	type t_corner_identification_change_lut is array (0 to 7) of signed(19 downto 0);
+	constant inaccuracy_amplitude: integer := 20000;
+	constant inaccuracy_corner: integer := 600;
+	type t_corner_identification_change_lut is array (0 to in_luts_const) of signed(19 downto 0);
 	variable corner_identification_change_lut : t_corner_identification_change_lut:=(others => (others => '0'));
    
 begin
 	amplitude := amplitude_lut(0);
-	amplitude_lut_loop :  for i in 1 to 7 loop
+	amplitude_lut_loop :  for i in 1 to in_luts_const loop
 		if(i <= in_lut-1) then
 			if(amplitude-conv_unsigned(inaccuracy_amplitude,19) > amplitude_lut(i) or amplitude_lut(i) > amplitude+conv_unsigned(inaccuracy_amplitude,19)) then
 					identification_change_amplitude := 1;
@@ -85,9 +85,9 @@ begin
 		modulation := "10";
 	else
 		corner_identification_change_lut(0):=corner_lut(0);
-		corner_lut_loop1 :  for j in 1 to 7 loop
+		corner_lut_loop1 :  for j in 1 to in_luts_const loop
 			if(j <= in_lut-1) then
-				corner_lut_loop2 :  for k in 0 to 7 loop
+				corner_lut_loop2 :  for k in 0 to in_luts_const loop
 					if(k <= number_corners-1) then
 						if(corner_identification_change_lut(k) < corner_lut(j)+conv_unsigned(inaccuracy_corner,19) and corner_identification_change_lut(k) > corner_lut(j)-conv_unsigned(inaccuracy_corner,19)) then
 							identification_coincidences_corner := 1;
@@ -236,6 +236,7 @@ main:
 process(clk, nRst)
 	begin
 		if nRst='0' then
+			modulation_mode_r <= (others => '0');
 			time_not_react_r <=(others => '0');
 			differencial_I_Data_In_r <=0;
 			differencial_Q_Data_In_r <=0;
@@ -244,82 +245,88 @@ process(clk, nRst)
 			delay_r <=(others => '1');
 			count_delay_r <=(others => '0');
 			count_testing_time_r <=(others => '0');
-			count_time_r <=(others => '0');
 			amplitude_r <=(others => '0');
 			corner_r <=(others => '0');
 			amplitude_lut <=(others => (others => '0'));
 			corner_lut <=(others => (others => '0'));
 			indicator_revolt_differencial <= 0;
-			indicator_out <= 0;
 			in_luts <= 0;
 
-		elsif rising_edge(clk) then
-				if(time_not_react_r < conv_unsigned(time_not_react_const,time_not_react_r'length)) then
-					time_not_react_r<=time_not_react_r+1;	
-				else
-					 if(time_not_react_r<=conv_unsigned(time_not_react_const,time_not_react_r'length)) then
-					 	delay_IData_In_r <= IData_In;
-					 	delay_QData_In_r <= QData_In;
-					 	time_not_react_r<=time_not_react_r+1;
+		elsif rising_edge(clk) then	
+				if(DataValid = '1') then
+					if(time_not_react_r < conv_unsigned(time_not_react_const,time_not_react_r'length)) then
+						time_not_react_r<=time_not_react_r+1;	
 					else
-						differencial_I_Data_In_r<=conv_integer(signed(delay_IData_In_r))-conv_integer(signed(IData_In));
-						differencial_Q_Data_In_r<=conv_integer(signed(delay_QData_In_r))-conv_integer(signed(QData_In));
-						amplitude_r<= signed(IData_In)* signed(IData_In) + signed(QData_In)*signed(QData_In);
-						address_in_division_lut<= IData_In(IData_In'length-2 downto 0);
-						corner_r<=signed(QData_In)*signed(IData_In(0)&division_number);
-						if( abs(differencial_I_Data_In_r) >limit_sensivity_differencial_const or abs(differencial_Q_Data_In_r) >limit_sensivity_differencial_const) then
-							indicator_revolt_differencial<=1;
-						else		
-							if(indicator_revolt_differencial=1) then
-								indicator_revolt_differencial<=0;
-								
-								if(delay_r>count_delay_r) then
-									delay_r<=count_delay_r;
-								end if;
-									count_delay_r <= (others => '0');
-								if(count_testing_time_r <= conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then
-									corner_lut(in_luts)<= corner_r;
-									amplitude_lut(in_luts)<= unsigned(amplitude_r);
-									in_luts<=in_luts+1;
-									
-								 else
-									indicator_out <= 1;
-								 	if modulation_mode_r= if_modulation_0_const then
-										useful_information(1 downto 0)<=demodulator_QPSK(IData_In,QData_In);
-								 	elsif modulation_mode_r=if_modulation_1_const then
-								 		useful_information(2 downto 0)<=demodulator_8PSK(IData_In,QData_In);
-								 	elsif modulation_mode_r=if_modulation_2_const then	
-								 		useful_information<=demodulator_16QAM(IData_In,QData_In);
-								 	elsif modulation_mode_r=if_modulation_3_const then 
-								 		useful_information<=(others => '0');
-									end if;	
-								end if;
-							else
-								indicator_out <= 0;
-								count_delay_r<=count_delay_r + 1;
-							end if;
-						end if;	
+						if(time_not_react_r<=conv_unsigned(time_not_react_const,time_not_react_r'length)) then
 							delay_IData_In_r <= IData_In;
 							delay_QData_In_r <= QData_In;
-					end if;
-			end if;
-			if(count_testing_time_r < conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then
-				count_testing_time_r<=count_testing_time_r + 1;
-				
-			elsif(count_testing_time_r = conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then
-				modulation_mode_r<=modulation_identification(amplitude_lut,corner_lut,in_luts);
-				modulation_mode<=modulation_mode_r;
-					if (modulation_mode_r= if_modulation_0_const) then
-						DataStrobe <='1';
-					elsif (modulation_mode_r=if_modulation_1_const) then
-						DataStrobe <='1';
-					elsif (modulation_mode_r=if_modulation_2_const) then
-						DataStrobe <='1';
-					elsif (modulation_mode_r=if_modulation_3_const) then 
-						DataStrobe <='0';
-					end if;
+							time_not_react_r<=time_not_react_r+1;
+						else
+							if(count_testing_time_r <= conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then
+							delay<=std_logic_vector(delay_r(7 downto 3));
+							end if;
+							differencial_I_Data_In_r<=conv_integer(signed(delay_IData_In_r))-conv_integer(signed(IData_In));
+							differencial_Q_Data_In_r<=conv_integer(signed(delay_QData_In_r))-conv_integer(signed(QData_In));
+							amplitude_r<= signed(IData_In)* signed(IData_In) + signed(QData_In)*signed(QData_In);
+							address_in_division_lut<= IData_In(IData_In'length-2 downto 0);
+							corner_r<=signed(QData_In)*signed(IData_In(0)&division_number);
+							if( abs(differencial_I_Data_In_r) >limit_sensivity_differencial_const or abs(differencial_Q_Data_In_r) >limit_sensivity_differencial_const) then
+								indicator_revolt_differencial<=1;
+							else		
+								if(indicator_revolt_differencial=1) then
+									indicator_revolt_differencial<=0;
+									
+									if(delay_r>count_delay_r) then
+										delay_r<=count_delay_r;
+									end if;
+										count_delay_r <= (others => '0');
+									if(count_testing_time_r <= conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then
+										if(in_luts <= in_luts_const) then 
+											corner_lut(in_luts)<= corner_r;
+											amplitude_lut(in_luts)<= unsigned(amplitude_r);
+											in_luts<=in_luts+1;
+										end if;
+									else
+										useful_information_strobe <= '1';
+										if modulation_mode_r= if_modulation_0_const then
+											useful_information(1 downto 0)<=demodulator_QPSK(IData_In,QData_In);
+										elsif modulation_mode_r=if_modulation_1_const then
+											useful_information(2 downto 0)<=demodulator_8PSK(IData_In,QData_In);
+										elsif modulation_mode_r=if_modulation_2_const then	
+											useful_information<=demodulator_16QAM(IData_In,QData_In);
+										elsif modulation_mode_r=if_modulation_3_const then 
+											useful_information<=(others => '0');
+										end if;	
+									end if;
+								else
+									useful_information_strobe <= '0';
+									count_delay_r<=count_delay_r + 1;
+								end if;
+							end if;	
+								delay_IData_In_r <= IData_In;
+								delay_QData_In_r <= QData_In;
+						end if;
+				end if;
+				if(count_testing_time_r <= conv_unsigned(mean_testing_time_const, count_testing_time_r'length)-1) then
 					count_testing_time_r<=count_testing_time_r + 1;
-			end if;		
+					if(count_testing_time_r = conv_unsigned(mean_testing_time_const, count_testing_time_r'length)-1) then
+						modulation_mode_r<=modulation_identification(amplitude_lut,corner_lut,in_luts);
+					end if;
+				elsif(count_testing_time_r = conv_unsigned(mean_testing_time_const, count_testing_time_r'length)) then	
+						modulation_mode<=std_logic_vector(modulation_mode_r);
+						
+						if (modulation_mode_r= if_modulation_0_const) then
+							DataStrobe <='1';
+						elsif (modulation_mode_r=if_modulation_1_const) then
+							DataStrobe <='1';
+						elsif (modulation_mode_r=if_modulation_2_const) then
+							DataStrobe <='1';
+						elsif (modulation_mode_r=if_modulation_3_const) then 
+							DataStrobe <='0';
+						end if;
+						count_testing_time_r<=count_testing_time_r + 1;
+				end if;	
+			end if;	
 		end if;		
 	end process;
 end architecture;
