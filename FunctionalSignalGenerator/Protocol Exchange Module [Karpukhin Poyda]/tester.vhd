@@ -59,11 +59,22 @@ begin
 			serial_r <= '0';
 			wait for clockPeriod_r;
 			
-			for i in 0 to 15 loop
+			for i in 0 to 7 loop
 				serial_r <= pack_r(i);
 				wait for clockPeriod_r;
 			end loop;
+
+			serial_r <= '1'; -- LAST BIT
+			wait for clockPeriod_r;
+
+			serial_r <= '0';
+			wait for clockPeriod_r;
 			
+			for i in 8 to 15 loop
+				serial_r <= pack_r(i);
+				wait for clockPeriod_r;
+			end loop;
+
 			serial_r <= '1'; -- LAST BIT
 			wait for clockPeriod_r;
 		end procedure;
@@ -83,19 +94,20 @@ begin
 		
 		send_to_serial(package_1_r, fsdo_r);
 		send_to_serial(package_3_r, fsdo_r);
+		wait for clockPeriod_r;
 		rdreq_output <= '1';
 		
 		wait for 2 * clockPeriod_r;
 		rdreq_output <= '0';
 		
-		wait for 50 ms;
+		wait for 50 ms - 10 us;
 		
 		fscts_r <= '1';
 		
 		send_to_deserialized(package_2_r);
 		send_to_deserialized(package_5_r);
 		
-		wait for 4 * clockPeriod_r;
+		wait for 10 us;
 		
 		fscts_r <= '0';
 		

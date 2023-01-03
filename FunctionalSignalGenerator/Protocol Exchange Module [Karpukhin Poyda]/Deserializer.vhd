@@ -17,7 +17,12 @@ end entity;
 architecture Deserializer_arch of Deserializer is
 	signal wrreq_r: std_logic := '0';
 	signal data_output_r: std_logic_vector(15 DOWNTO 0) := "0000000000000000";
-	signal state_r: integer range -1 to 17 := -1;
+	signal state_r: integer range 0 to 9 := 0;
+	-- 0 - WAITING FOR FIRST BIT
+	-- 1-8 - STORAGING SERIAL INPUT
+	-- 9 - READING LAST BIT
+
+	signal is_second_byte_r: std_logic := '0';
 	
 	component fifo is 
 		port (
@@ -51,24 +56,36 @@ begin
 		if rising_edge(clk) and rst = '0' then
 			
 			-- STORAGING SERIAL INPUT
-			if state_r >= 0 and state_r <= 15 then
-				data_output_r(state_r) <= FT2232H_FSDO;
+			if state_r >= 1 and state_r <= 8 then
+				if is_second_byte_r = '0' then
+					data_output_r(state_r - 1) <= FT2232H_FSDO;
+				else
+					data_output_r(state_r + 7) <= FT2232H_FSDO;
+				end if;
 			end if;
 			
 			-- OPENING REQUEST TO WRITE TO FIFO 
-			if state_r = 16 then -- + THERE IS LAST BIT SKIP
+			if state_r = 9 and is_second_byte_r = '1' then -- + THERE IS LAST BIT SKIP
 				wrreq_r <= '1';
 			else
 				wrreq_r <= '0';
 			end if;
 			
-			if state_r = -1 and  FT2232H_FSDO ='0' then -- FIRST BIT IS 0
-				state_r <= 0;
+			if state_r = 9 and is_second_byte_r = '1' then -- + THERE IS LAST BIT SKIP
+				is_second_byte_r <= '0';
+			elsif state_r = 9 and is_second_byte_r = '0' then 
+				is_second_byte_r <= '1';
+			end if;
+			
+			
+			-- UPDATE STATE	
+			if state_r = 0 and  FT2232H_FSDO ='0' then -- FIRST BIT IS 0
+				state_r <= 1;
 				
-			elsif state_r = 16 then
-				state_r <= -1;
+			elsif state_r = 9 then
+				state_r <= 0;
 					
-			elsif state_r >= 0 and state_r <= 15 then
+			elsif state_r >= 1 and state_r <= 8 then
 				state_r <= state_r + 1;
 			end if;
 			
