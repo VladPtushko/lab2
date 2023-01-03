@@ -57,18 +57,27 @@ begin
 	);
 	
 	
+	process(state_r, usedw_count)
+	begin
+		-- OPENING FOR READING
+		if (state_r = 20 or state_r = 0) and CONV_INTEGER(unsigned(usedw_count)) > 0 then
+			rdreq_input_r <= '1';
+		else
+			rdreq_input_r <= '0';
+		end if;
+	end process;
+	
 	
 	process(clk)
 	begin
-	
 		if rising_edge(clk) then
 		
 			-- OPENING FOR READING
-			if CONV_INTEGER(unsigned(usedw_count)) > 0 and state_r = 0 then
-				rdreq_input_r <= '1';
-			else
-				rdreq_input_r <= '0';
-			end if;
+--			if (state_r = 19 or state_r = 0) and CONV_INTEGER(unsigned(usedw_count)) > 0 then
+--				rdreq_input_r <= '1';
+--			else
+--				rdreq_input_r <= '0';
+--			end if;
 			
 			-- INCREMENT STATE
 			if state_r = 20 and CONV_INTEGER(unsigned(usedw_count)) > 0 then
@@ -90,35 +99,11 @@ begin
 				state_r <= 1;
 			end if;
 			
-			
-			
---			-- FSDI
---			if state_r /= 0 then
---			
---				if state_r = 1 then
---					fsdi_r <= '0';
---				elsif state_r >= 2 and state_r <= 9 then
---					fsdi_r <= q_input_r(state_r - 2);
---				elsif state_r = 10 then
---					fsdi_r <= '1';
---
---				elsif state_r = 11 then
---					fsdi_r <= '0';
---				elsif state_r >= 12 and state_r <= 19 then
---					fsdi_r <= q_input_r(state_r - 4);
---				elsif state_r = 20 then
---					fsdi_r <= '1';
---				end if;
---			
---			else
---				fsdi_r <= '1';
---			end if;
-			
 		end if;
 	
 	end process;
 	
-	process(state_r)
+	process(state_r, q_input_r)
 	begin
 		-- FSDI
 		if state_r /= 0 then
@@ -141,6 +126,7 @@ begin
 		else
 			fsdi_r <= '1';
 		end if;
+		
 	end process;
 
 end Serializer_arch;
