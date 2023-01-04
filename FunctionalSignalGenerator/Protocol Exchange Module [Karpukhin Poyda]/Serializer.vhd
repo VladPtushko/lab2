@@ -90,7 +90,7 @@ begin
 --				end if;
 			elsif state_r = 1 then
 				state_r <= 2;
-			elsif state_r /= 0 and FT2232H_FSCTS = '0' then
+			elsif state_r = 10 or (state_r /= 0 and FT2232H_FSCTS = '0') then
 				state_r <= state_r + 1;
 			end if;
 			
