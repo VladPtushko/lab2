@@ -1,6 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
+
+package sevenseg_pkg11 is
+  type current_type is
+  (state_wait, header_read, addres_check, header_analysis, header_transfer, data_transfer, error_handling);
+
+end package;
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use work.sevenseg_pkg11.all;
 entity Protocol_exchange_module is
   port (
     Clk : in std_logic;
@@ -28,15 +39,16 @@ entity Protocol_exchange_module is
     WB_Cyc_2 : out std_logic;
     WB_Cyc_3 : out std_logic;
     WB_Ack : in std_logic;--????????????? ???????? ?????????? ????????? ???????? ??????
-    WB_CTI : out std_logic_vector (2 downto 0)-- ?000? ? ??????? ????; ??????
+    WB_CTI : out std_logic_vector (2 downto 0);-- ?000? ? ??????? ????; ??????
     -- ?001? ? ???????? ???? ? ????????????? ???????; ?? ???
     -- ?010? ? ???????? ???? ? ???????????????? ???????; ???
     -- ?011-110? ? ???????????????;
     -- ?111? ? ????????? ?????
+    rcurrent_state : out current_type
   );
 end entity;
 architecture rtl of Protocol_exchange_module is
-  type current_type is (state_wait, header_read, addres_check, header_analysis, header_transfer, data_transfer, error_handling);
+  --type current_type is (state_wait, header_read, addres_check, header_analysis, header_transfer, data_transfer, error_handling);
   signal header_word_count : std_logic_vector(1 downto 0);
   signal current_state : current_type;
   signal double_write_s : std_logic;
@@ -73,54 +85,67 @@ begin
   process (Clk, nRst) begin
     if (nRst = '0') then
       current_state <= state_wait;
+      rcurrent_state <= state_wait;
 
     elsif (rising_edge(Clk)) then
       case current_state is
         when state_wait =>
           if (usedw_input_fi > 2) then
             current_state <= header_read;
+            rcurrent_state <= header_read;
           end if;
 
         when header_read =>
           if (header_word_count = B"01") then
             current_state <= addres_check;
+            rcurrent_state <= addres_check;
           end if;
 
         when addres_check =>
           current_state <= header_analysis;
+          rcurrent_state <= header_analysis;
 
         when header_analysis =>
           if (FB_r = '0' and AddrValid_r = B"000") then
             if (Cmd_r = B"010" or Cmd_r = B"100" or Cmd_r = B"110") then
               current_state <= data_transfer;
+              rcurrent_state <= data_transfer;
             else
               current_state <= header_transfer;
+              rcurrent_state <= header_transfer;
             end if;
           else
             current_state <= header_transfer;
+            rcurrent_state <= header_transfer;
           end if;
 
         when header_transfer =>
           if (header_transfer_end_s = '1') then
             if (double_write_s = '1') then
               current_state <= header_transfer;
+              rcurrent_state <= header_transfer;
             elsif (AddrValid_r = B"000") then
               current_state <= data_transfer;
+              rcurrent_state <= data_transfer;
             elsif (Cmd_r = B"001" or Cmd_r = B"011" or Cmd_r = B"101") then
-              current_state <= error_handling;
+              rcurrent_state <= error_handling;
+              rcurrent_state <= error_handling;
             else
               current_state <= state_wait;
+              rcurrent_state <= state_wait;
             end if;
           end if;
 
         when data_transfer =>
           if (byte_count = 0 or byte_count = 2047) then
             current_state <= state_wait;
+            rcurrent_state <= state_wait;
           end if;
 
         when error_handling =>
           if (byte_count = 0 or byte_count = 2047) then
             current_state <= state_wait;
+            rcurrent_state <= state_wait;
           end if;
       end case;
 
@@ -185,10 +210,10 @@ begin
             TID_r <= q_input(7 downto 0);
             AddrValid_r <= q_input(10 downto 8);
             R2_r <= q_input(15 downto 11);
-            read_en_r <= B"00";
             rdreq_output <= '0';
           elsif (header_word_count = B"01") then
             Addr_r <= q_input;
+            read_en_r <= B"00";
           end if;
           header_word_count <= header_word_count - B"01";
         end if;
@@ -222,20 +247,7 @@ begin
           ----------------------------------------------------------------------------------------------------------
         elsif (Addr_r > X"01FF" and Addr_r < X"0300") then--256
           if ((Addr_r + byte_count) < X"0300") then
-            Addr_write_r <= Addr_r;-- - X"0200";
-            AddrValid_r <= B"000";
-            WB_Cyc_0_s <= '1';
-            WB_Cyc_1_s <= '0';
-            WB_Cyc_2_s <= '0';
-            WB_Cyc_3_s <= '0';
-          else
-            AddrValid_r <= B"001";
-            Addr_r <= X"0100";
-          end if;
-          ----------------------------------------------------------------------------------------------------------
-        elsif (Addr_r > X"02FF" and Addr_r < X"0400") then--256
-          if ((Addr_r + byte_count) < X"0400") then
-            Addr_write_r <= Addr_r - X"0300";
+            Addr_write_r <= Addr_r - X"0200";
             AddrValid_r <= B"000";
             WB_Cyc_0_s <= '0';
             WB_Cyc_1_s <= '0';
@@ -246,17 +258,30 @@ begin
             Addr_r <= X"0100";
           end if;
           ----------------------------------------------------------------------------------------------------------
+        elsif (Addr_r > X"02FF" and Addr_r < X"0400") then--256
+          if ((Addr_r + byte_count) < X"0400") then
+            Addr_write_r <= Addr_r - X"0300";
+            AddrValid_r <= B"000";
+            WB_Cyc_0_s <= '0';
+            WB_Cyc_1_s <= '0';
+            WB_Cyc_2_s <= '0';
+            WB_Cyc_3_s <= '1';
+          else
+            AddrValid_r <= B"100";
+            Addr_r <= X"0100";
+          end if;
+          ----------------------------------------------------------------------------------------------------------
         elsif (Addr_r > X"03FF" and Addr_r < X"1000") then--15K
           Addr_r <= X"3C00";
           AddrValid_r <= B"110";
           ----------------------------------------------------------------------------------------------------------
         elsif (Addr_r > X"0FFF" and Addr_r < X"1800") then--2K
           Addr_r <= X"0800";
-          AddrValid_r <= B"001";
+          AddrValid_r <= B"111";
           ----------------------------------------------------------------------------------------------------------
         else --46K
           Addr_r <= X"B800";
-          AddrValid_r <= B"111";
+          AddrValid_r <= B"110";
         end if;
         --===============================================================================================================================
       elsif (current_state = header_transfer) then
@@ -264,10 +289,8 @@ begin
           header_transfer_end_s <= '0';
           if (double_write_s = '1') then
             double_write_s <= '0';
-          elsif (FB_r = '1' and AddrValid_r = B"000") then
-            if (Cmd_r = B"001" or Cmd_r = B"011" or Cmd_r = B"101") then
-              double_write_s <= '1';
-            end if;
+          elsif (FB_r = '1' and AddrValid_r = B"000" and (Cmd_r = B"001" or Cmd_r = B"011" or Cmd_r = B"101")) then
+            double_write_s <= '1';
           end if;
           header_word_count <= B"11";
         else
@@ -318,6 +341,7 @@ begin
           if (byte_count = 0 or byte_count = 2047) then
             wrreq_output <= '0';
             WB_ready_r <= B"00";
+            WB_STB <= '0';
           elsif (usedw_input_fo < 1022) then
             if (WB_ready_r = B"00") then
               WB_Addr <= Addr_write_r;
@@ -331,10 +355,10 @@ begin
               WB_ready_r <= B"01";
               if (byte_count = 2) then
                 WB_Sel <= B"11";
-                WB_CTI <= B"111";
+                WB_CTI <= B"000";
               elsif (byte_count = 1) then
                 WB_Sel <= B"01";
-                WB_CTI <= B"111";
+                WB_CTI <= B"000";
               else
                 WB_Sel <= B"11";
                 WB_CTI <= B"000";
@@ -342,20 +366,22 @@ begin
             elsif (WB_ready_r = B"01") then
               if (WB_Ack = '1' or WB_ack_check_s = '1') then
                 WB_ack_check_s <= '0';
+                WB_STB <= '0';
                 if (byte_count = 1 or byte_count = 2) then
                   WB_Cyc_0 <= '0';
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
                   WB_STB <= '0';
+                  WB_Sel <= B"00";
                 end if;
                 byte_count <= byte_count - B"10";
                 WB_ready_r <= B"00";
                 wrreq_output <= '1';
-                if (WB_ready_r = B"11") then
-                  WB_ready_r <= B"00";
-                  wrreq_output <= '1';
-                elsif (WB_Cyc_0_s = '1') then
+                --if (WB_ready_r = B"11") then
+                --WB_ready_r <= B"00";
+                --wrreq_output <= '1';
+                if (WB_Cyc_0_s = '1') then
                   data_output <= WB_DataIn_0;
                 elsif (WB_Cyc_1_s = '1') then
                   data_output <= WB_DataIn_1;
@@ -383,7 +409,7 @@ begin
           elsif (WB_ready_r = B"01") then
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
               WB_STB <= '0';
-              if (usedw_input_fi > 0) then
+              if (usedw_input_fi > 0 or byte_count = 2 or byte_count = 1) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then
                   rdreq_output <= '0';
@@ -391,6 +417,9 @@ begin
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
+                  WB_WE <= '0';
+                  WB_Sel <= B"00";
+
                 else
                   rdreq_output <= '1';
                 end if;
@@ -417,10 +446,10 @@ begin
             WB_DataOut <= q_input;
             if (byte_count = 2) then
               WB_Sel <= B"11";
-              WB_CTI <= B"111";
+              WB_CTI <= B"000";
             elsif (byte_count = 1) then
               WB_Sel <= B"01";
-              WB_CTI <= B"111";
+              WB_CTI <= B"000";
             else
               WB_Sel <= B"11";
               WB_CTI <= B"000";
@@ -435,6 +464,7 @@ begin
           if (byte_count = 0 or byte_count = 2047) then
             wrreq_output <= '0';
             WB_ready_r <= B"00";
+            WB_STB <= '0';
           elsif (usedw_input_fo < 1022) then
             if (WB_ready_r = B"00") then
               WB_Addr <= Addr_write_r;
@@ -459,20 +489,22 @@ begin
             elsif (WB_ready_r = B"01") then
               if (WB_Ack = '1' or WB_ack_check_s = '1') then
                 WB_ack_check_s <= '0';
+                WB_STB <= '0';
                 if (byte_count = 1 or byte_count = 2) then
                   WB_Cyc_0 <= '0';
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
                   WB_STB <= '0';
+                  WB_Sel <= B"00";
                 end if;
                 byte_count <= byte_count - B"10";
                 WB_ready_r <= B"00";
                 wrreq_output <= '1';
-                if (WB_ready_r = B"11") then
-                  WB_ready_r <= B"00";
-                  wrreq_output <= '1';
-                elsif (WB_Cyc_0_s = '1') then
+                --if (WB_ready_r = B"11") then
+                --WB_ready_r <= B"00";
+                --wrreq_output <= '1';
+                if (WB_Cyc_0_s = '1') then
                   data_output <= WB_DataIn_0;
                 elsif (WB_Cyc_1_s = '1') then
                   data_output <= WB_DataIn_1;
@@ -500,7 +532,7 @@ begin
           elsif (WB_ready_r = B"01") then
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
               WB_STB <= '0';
-              if (usedw_input_fi > 0) then
+              if (usedw_input_fi > 0 or byte_count = 2 or byte_count = 1) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then
                   rdreq_output <= '0';
@@ -508,6 +540,8 @@ begin
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
+                  WB_WE <= '0';
+                  WB_Sel <= B"00";
                 else
                   rdreq_output <= '1';
                 end if;
@@ -553,6 +587,7 @@ begin
           if (byte_count = 0 or byte_count = 2047) then
             wrreq_output <= '0';
             WB_ready_r <= B"00";
+            WB_STB <= '0';
           elsif (usedw_input_fo < 1022) then
             if (WB_ready_r = B"00") then
               WB_Addr <= Addr_write_r;
@@ -578,20 +613,22 @@ begin
             elsif (WB_ready_r = B"01") then
               if (WB_Ack = '1' or WB_ack_check_s = '1') then
                 WB_ack_check_s <= '0';
+                WB_STB <= '0';
                 if (byte_count = 1 or byte_count = 2) then
                   WB_Cyc_0 <= '0';
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
                   WB_STB <= '0';
+                  WB_Sel <= B"00";
                 end if;
                 byte_count <= byte_count - B"10";
                 WB_ready_r <= B"00";
                 wrreq_output <= '1';
-                if (WB_ready_r = B"11") then
-                  WB_ready_r <= B"00";
-                  wrreq_output <= '1';
-                elsif (WB_Cyc_0_s = '1') then
+                --if (WB_ready_r = B"11") then
+                --WB_ready_r <= B"00";
+                --wrreq_output <= '1';
+                if (WB_Cyc_0_s = '1') then
                   data_output <= WB_DataIn_0;
                 elsif (WB_Cyc_1_s = '1') then
                   data_output <= WB_DataIn_1;
@@ -619,7 +656,7 @@ begin
           elsif (WB_ready_r = B"01") then
             if (WB_Ack = '1' or WB_ack_check_s = '1') then
               WB_STB <= '0';
-              if (usedw_input_fi > 0) then
+              if (usedw_input_fi > 0 or byte_count = 2 or byte_count = 1) then
                 WB_ack_check_s <= '0';
                 if (byte_count = 2 or byte_count = 1) then
                   rdreq_output <= '0';
@@ -627,6 +664,8 @@ begin
                   WB_Cyc_1 <= '0';
                   WB_Cyc_2 <= '0';
                   WB_Cyc_3 <= '0';
+                  WB_WE <= '0';
+                  WB_Sel <= B"00";
                 else
                   rdreq_output <= '1';
                 end if;
